@@ -3,18 +3,18 @@ import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <HeaderComponent></HeaderComponent>
-  <div class="container">
-    <main>
-      <RouterView />
-    </main>
-  </div>
+   <HeaderComponent></HeaderComponent>
+   <div class="container">
+      <main>
+         <RouterView />
+      </main>
+   </div>
 </template>
 
 <style scoped>
 .container {
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
+   max-width: 1200px;
+   width: 100%;
+   margin: 0 auto;
 }
 </style>
