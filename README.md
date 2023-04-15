@@ -74,3 +74,19 @@ Yes
 ```bash
 npm install
 ```
+
+## v-once
+> 렌더링을 한번만 할 경우 사용된다.
+```vue
+    <span v-once>
+      <!-- changeMessagee 함수를 통해도 변경안됨 -->
+     {{ message }}
+    </span>
+    <span>
+    <!-- changeMessagee 함수를 통해 데이터 변경됨 -->
+      {{ message }}
+    </span>
+    <button @click="changeMessagee">메세지 변경</button>
+```
+## keep-alive
+> 컴퍼넌트의 캐쉬를 유지하고 싶을때 사용된다.
