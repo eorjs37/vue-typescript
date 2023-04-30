@@ -4,6 +4,7 @@ import { RouterView } from 'vue-router';
 
 <template>
    <HeaderComponent></HeaderComponent>
+   <SideBarComponent></SideBarComponent>
    <div class="container">
       <main>
          <RouterView />

@@ -1,8 +1,8 @@
 <template>
-   <header>
+   <header @keydown.esc="isOpenSideBar">
       <div class="head-container">
-         <input type="checkbox" hidden id="hambuger" />
-         <label class="hambuger" for="hambuger">
+         <input type="checkbox" hidden id="hambuger" v-model="sideBarChecked" />
+         <label class="hambuger" for="hambuger" @click="isOpenSideBar">
             <span class="line"></span>
             <span class="line"></span>
             <span class="line"></span>
@@ -15,9 +15,59 @@
    </header>
 </template>
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import type { Ref } from 'vue';
+const sideBarEle: Ref<Element | null> = ref(null);
+const sideBarChecked: Ref<boolean> = ref(false);
 
-onMounted(() => {});
+const setSideBarEle = () => {
+   sideBarEle.value = document.querySelector('#sidebar');
+};
+
+const hacOpenClass = (): boolean => {
+   const hasClose = sideBarEle.value?.classList.contains('is-open');
+
+   return hasClose ? true : false;
+};
+
+const isOpenSideBar = () => {
+   if (hacOpenClass()) {
+      closeSideBar();
+   } else {
+      openSideBar();
+   }
+};
+
+const addEscEvent = () => {
+   window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && hacOpenClass()) {
+         closeSideBar();
+         sideBarChecked.value = false;
+      }
+   });
+};
+
+const addClickEvent = () => {
+   window.addEventListener('click', (event: MouseEvent) => {
+      if ((event.target as Element).id !== 'side-bar-left' && sideBarChecked.value) {
+         closeSideBar();
+         sideBarChecked.value = false;
+      }
+   });
+};
+
+const openSideBar = () => {
+   sideBarEle.value?.classList.add('is-open');
+};
+const closeSideBar = () => {
+   sideBarEle.value?.classList.remove('is-open');
+};
+
+onMounted(() => {
+   setSideBarEle();
+   addClickEvent();
+   addEscEvent();
+});
 </script>
 
 <style scoped>
