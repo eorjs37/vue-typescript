@@ -90,3 +90,9 @@ npm install
 ```
 ## keep-alive
 > 컴퍼넌트의 캐쉬를 유지하고 싶을때 사용된다.
+
+
+## typescript + jest
+```bash
+
+```
