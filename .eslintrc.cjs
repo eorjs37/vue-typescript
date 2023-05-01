@@ -6,7 +6,9 @@ module.exports = {
    extends: ['plugin:vue/vue3-essential', 'eslint:recommended', '@vue/eslint-config-typescript', '@vue/eslint-config-prettier/skip-formatting'],
    rules: {
       'vue/no-export-in-script-setup': 0,
-      'vue/valid-template-root': 0
+      'vue/valid-template-root': 0,
+      'no-undef':0,
+      'prefer-const':0
    },
    parserOptions: {
       ecmaVersion: 'latest'
