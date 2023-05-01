@@ -49,6 +49,7 @@ const addEscEvent = () => {
 
 const addClickEvent = () => {
    window.addEventListener('click', (event: MouseEvent) => {
+      console.log('click');
       if ((event.target as Element).id !== 'side-bar-left' && sideBarChecked.value) {
          closeSideBar();
          sideBarChecked.value = false;

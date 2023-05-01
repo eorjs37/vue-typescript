@@ -29,7 +29,9 @@ describe('HeaderComponent unit testing', () => {
       expect(wrapper.vm.sideBarEle).toBeTruthy();
    });
 
-   test('전체 app의 클릭 이벤트가 발생했을 경우, 사이드바가 열려있을 경우 닫아주기 이벤트 등록', () => {});
+   test('전체 app의 클릭 이벤트가 발생했을 경우, 사이드바가 열려있을 경우 닫아주기 이벤트 등록', async () => {
+      document.getElementById('sidebar')?.click();
+   });
 });
 
 export {};
