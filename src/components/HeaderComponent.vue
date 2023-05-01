@@ -68,6 +68,13 @@ onMounted(() => {
    addClickEvent();
    addEscEvent();
 });
+
+defineExpose({
+   setSideBarEle,
+   addClickEvent,
+   addEscEvent,
+   sideBarEle
+});
 </script>
 
 <style scoped>
