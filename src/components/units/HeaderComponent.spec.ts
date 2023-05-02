@@ -11,7 +11,9 @@ describe('HeaderComponent unit testing', () => {
       addClickEventFunc = wrapper.vm.addClickEvent = jest.fn();
       addEscEventFunc = wrapper.vm.addEscEvent = jest.fn();
       document.body.innerHTML = `
-         <div id='sidebar'></div>
+         <div id='sidebar'>
+         
+</div>
       `;
    });
 
@@ -29,8 +31,9 @@ describe('HeaderComponent unit testing', () => {
       expect(wrapper.vm.sideBarEle).toBeTruthy();
    });
 
-   test('전체 app의 클릭 이벤트가 발생했을 경우, 사이드바가 열려있을 경우 닫아주기 이벤트 등록', async () => {
-      document.getElementById('sidebar')?.click();
+   test('사이드바가 닫혀있을 경우 열어주기', async () => {
+      //햄버거 클릭
+      wrapper.find('.hambuger').trigger('click');
    });
 });
 
