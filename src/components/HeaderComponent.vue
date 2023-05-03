@@ -69,6 +69,7 @@ onMounted(() => {
    addEscEvent();
 });
 
+//test code에서 확인이 가능하도록 하기 위해
 defineExpose({
    setSideBarEle,
    addClickEvent,
