@@ -1,5 +1,5 @@
 <template>
-   <header @keydown.esc="isOpenSideBar">
+   <header @keydown.esc="() => isOpenSideBar()">
       <div class="head-container">
          <input type="checkbox" hidden id="hambuger" v-model="sideBarChecked" />
          <label class="hambuger" for="hambuger" @click="() => isOpenSideBar()">
