@@ -1,13 +1,25 @@
 <template>
    <div id="sidebar" class="overlay">
-      <nav id="side-bar-left" class="side-bar-left"></nav>
+      <nav id="side-bar-left" class="side-bar-left">
+         <ul class="list">
+            <li class="list-item" @click="move('/blog-write')">글쓰기</li>
+         </ul>
+      </nav>
    </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-onMounted(() => {});
+const router = useRouter();
+
+const move = (path: string): void => {
+   router.push(path);
+};
+
+defineExpose({
+   move
+});
 </script>
 
 <style scoped>
@@ -36,5 +48,16 @@ onMounted(() => {});
    width: 200px;
    height: 100%;
    background-color: #ffffff;
+}
+
+.list {
+   display: flex;
+   flex-direction: column;
+   padding: 20px;
+}
+
+.list-item {
+   padding: 10px;
+   cursor: pointer;
 }
 </style>
