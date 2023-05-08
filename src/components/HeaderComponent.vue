@@ -77,7 +77,8 @@ defineExpose({
    hacOpenClass,
    isOpenSideBar,
    openSideBar,
-   sideBarEle
+   sideBarEle,
+   sideBarChecked
 });
 </script>
 

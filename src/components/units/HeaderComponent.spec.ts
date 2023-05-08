@@ -64,6 +64,33 @@ describe('HeaderComponent unit testing', () => {
       //사이드바 is-open 존재하는지 확인
       expect(wrapper.vm.sideBarEle.classList.contains('is-open')).toBeFalsy();
    });
+
+   test('Esc 이벤트 발생 시 사이드바 열려있을 경우 닫아주기', async () => {
+      wrapper.vm.sideBarEle.classList.remove('is-open');
+      await wrapper.vm.addEscEvent();
+      const event = new KeyboardEvent('keydown', { key: 'Escape' });
+      window.dispatchEvent(event);
+
+      expect(wrapper.vm.sideBarEle.classList.contains('is-open')).toBeFalsy();
+      wrapper.vm.sideBarChecked = false;
+      expect(wrapper.vm.sideBarChecked).toBeFalsy();
+   });
+
+   test('사이드바가 열려있을 때 id=side-bar-left 이외의 영역 클릭할 경우 사이드바 닫아주기', () => {
+      wrapper.vm.sideBarEle.classList.add('is-open');
+      const ele = document.createElement('div');
+      ele.setAttribute('id', 'dummy');
+      document.body.append(ele);
+      ele.click();
+
+      //sideBarChecked.value true 변경
+      wrapper.vm.sideBarChecked = false;
+      //is-open 제거
+      wrapper.vm.sideBarEle.classList.remove('is-open');
+
+      expect(wrapper.vm.sideBarChecked).toBeFalsy();
+      expect(wrapper.vm.sideBarEle.classList.contains('is-open')).toBeFalsy();
+   });
 });
 
 export {};
