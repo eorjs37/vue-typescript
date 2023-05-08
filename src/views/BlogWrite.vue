@@ -1,5 +1,5 @@
 <template>
-   <div class="write-container">
+   <form id="form" class="write-container" @submit.prevent="submit()">
       <div class="form-control">
          <label for="title">*제목</label>
          <input type="text" id="title" v-model="writeForm.title" />
@@ -12,7 +12,7 @@
       <div class="btn-group">
          <button id="submit" type="button" @click="submit()">등록</button>
       </div>
-   </div>
+   </form>
 </template>
 
 <script lang="ts" setup>
@@ -28,14 +28,18 @@ const writeForm: Write = reactive({
    contents: ''
 });
 
-const submit = (): void => {
-   console.log(writeForm.title);
-   console.log(writeForm.contents);
+const submit = (): boolean => {
    if (writeForm.title.length > 10 || writeForm.contents.length > 100) {
       alert('제목은 10자 내용은 100자 이상 입력이 불가능합니다.');
+      return false;
+   } else if (!writeForm.title || !writeForm.contents) {
+      alert('제목 또는 내용을 입력해주세요');
+      return false;
    }
 
    registerApi();
+
+   return true;
 };
 
 const registerApi = () => {};

@@ -9,6 +9,15 @@ describe('BlogWrite unit testing', function () {
       wrapper = shallowMount(BlogWrite);
    });
 
+   test('제목 또는 내용이 비어있을 경우 alert 출력', () => {
+      const submit = jest.spyOn(wrapper.vm, 'submit');
+
+      wrapper.find('#submit').trigger('click');
+      expect(submit).toHaveBeenCalled();
+      expect(window.alert).toBeCalledWith('제목 또는 내용을 입력해주세요');
+      alert.mockClear();
+   });
+
    test('제목,내용이 초과할 경우 submit 클릭', async () => {
       const submit = jest.spyOn(wrapper.vm, 'submit');
       wrapper.find('#title').setValue('제목 입력공간입니다.10자이상을 입력하셨습니다.');
