@@ -16,12 +16,11 @@
 </template>
 
 <script lang="ts" setup>
+import { reactive } from 'vue';
 interface Write {
    title: string;
    contents: string;
 }
-
-import { reactive } from 'vue';
 
 const writeForm: Write = reactive({
    title: '',
