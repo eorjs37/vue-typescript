@@ -13,6 +13,11 @@ const router = createRouter({
          path: '/blog-write',
          name: 'blog-write',
          component: () => import('../views/BlogWrite.vue')
+      },
+      {
+         path: '/blog-list',
+         name: 'blog-list',
+         component: () => import('../views/BlogList.vue')
       }
    ]
 });
