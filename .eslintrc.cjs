@@ -7,7 +7,8 @@ module.exports = {
    rules: {
       'vue/no-export-in-script-setup': 0,
       'vue/valid-template-root': 0,
-      'no-undef':0
+      'no-undef': 0,
+      'vue/comment-directive': 0
    },
    parserOptions: {
       ecmaVersion: 'latest'

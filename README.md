@@ -92,7 +92,14 @@ npm install
 > 컴퍼넌트의 캐쉬를 유지하고 싶을때 사용된다.
 
 
-## typescript + jest
-```bash
+## Docker 
 
+### Dockerfile
+```bash
+docker build --platform linux/amd64 -t eorjs37/vue-typescript .
+```
+
+### Docker Run
+```bash
+docker run -d --name blog -p 80:80 eorjs37/vue-typescript 
 ```
