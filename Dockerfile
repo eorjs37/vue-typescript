@@ -5,6 +5,7 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
+RUN apt-get install -y docker-ce-cli
 
 
 # production stage
