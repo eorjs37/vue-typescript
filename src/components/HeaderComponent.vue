@@ -8,7 +8,7 @@
             <span class="line"></span>
          </label>
          <nav>
-            <a>로그인111</a>
+            <a>로그인</a>
             <a>회원가입</a>
          </nav>
       </div>
