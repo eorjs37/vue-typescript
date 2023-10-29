@@ -107,3 +107,8 @@ docker run -d --name blog -p 80:80 eorjs37/vue-typescript
 ```bash
 docker run -d --name web-front -v /etc/letsencrypt:/etc/letsencrypt -p 444:443 eorjs37/vue-typescript
 ```
+
+### Docker run 최종
+```bash
+docker run -d --name web-front -v /etc/letsencrypt:/etc/letsencrypt --network jenkins-network -p 443:443 eorjs37/vue-typescript
+```
