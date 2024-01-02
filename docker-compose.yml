@@ -13,3 +13,13 @@ services:
       - "444:443"
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
+      - /etc/sectigo:/etc/sectigo
+    networks:
+      - default
+      - jenkins-network
+    environment:
+      TZ: "Asia/Seoul"
+
+networks:
+  jenkins-network:
+    driver: bridge
