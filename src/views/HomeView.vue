@@ -1,5 +1,19 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { RouterView } from 'vue-router';
+</script>
 
 <template>
-   <main></main>
+   <HeaderComponent></HeaderComponent>
+   <SideBarComponent></SideBarComponent>
+   <div class="container">
+      <RouterView />
+   </div>
 </template>
+
+<style scoped>
+.container {
+   max-width: 1200px;
+   width: 100%;
+   margin: 0 auto;
+}
+</style>
