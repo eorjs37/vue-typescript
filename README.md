@@ -117,3 +117,8 @@ docker run -d --name web-front -v /etc/letsencrypt:/etc/letsencrypt --network je
 ```bash
 docker run -d --name web-front -v /etc/letsencrypt:/etc/letsencrypt -v /etc/sectigo:/etc/sectigo --network jenkins-network -p 443:443 eorjs37/vue-typescript:1.0
 ```
+
+### Docker run 최종3
+```bash
+docker run -d --name web-front -v /etc/letsencrypt:/etc/letsencrypt -v /etc/sectigo:/etc/sectigo  -p 443:443 eorjs37/vue-typescript:1.0
+```
