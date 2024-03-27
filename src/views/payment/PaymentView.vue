@@ -23,7 +23,7 @@
                                     1개
                                 </li>
                                 <li class="product_info_prod_price">
-                                    90,000
+                                    ￦2,990,000
                                 </li>
                             </ul>
                         </li>
