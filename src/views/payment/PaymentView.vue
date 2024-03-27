@@ -8,12 +8,12 @@
         <main class="payment_header_main">
             <ul class="payment_product_wrap">
                 <li class="payment_product_left">
-                   <h2 class="product_name">주문 상품 정보</h2>
+                   <h2 class="product_name">주문 상품 정보 </h2>
                    <div class="product_info_wrap">
                     <ul class="product_info">
                         <li>
                             <figure class="product_info_img_wrap">
-                                <img class="product_info_img" :src="`@/assets/images/img.jpeg`" alt="맥북">
+                                <img class="product_info_img" :src="`/images/${imagesrc}.jpeg`" alt="맥북">
                             </figure>
                         </li>
                     </ul>
@@ -26,6 +26,10 @@
     </section>
 </template>
 <script lang="ts" setup>
+import { ref, type Ref } from "vue";
+
+    const imagesrc: Ref<string> = ref('img');
+
 
 </script>
 <style scoped src="@/assets/styles/payment.css">
