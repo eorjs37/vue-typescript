@@ -17,8 +17,8 @@ pipeline{
             steps{
                 echo 'deploy'
                 sh'''
-                  variable= ${docker container ls --all --quiet --filter "name=web-front"}
-                  echo "${variable}"
+                  docker rm  ${docker container ls --all --quiet --filter "name=web-front"}
+                  docker run -d --name web-front -v /etc/letsencrypt:/etc/letsencrypt -v /etc/sectigo:/etc/sectigo  -p 443:443 eorjs37/vue-typescript:1.0
                 '''
             }
         }
