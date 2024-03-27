@@ -71,3 +71,26 @@
     width: 100%;
     height: 100%;
 }
+
+.product_info_info_list{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.product_info_prod_name{
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 500;
+}
+.product_info_prod_count{
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--E0E0E0);
+}
+
+.product_info_prod_price{
+    color: var(--041643);
+    line-height: 1.4;
+    font-weight: 700;
+}

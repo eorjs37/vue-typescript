@@ -16,6 +16,17 @@
                                 <img class="product_info_img" :src="`/images/${imagesrc}.jpeg`" alt="맥북">
                             </figure>
                         </li>
+                        <li>
+                            <ul class="product_info_info_list">
+                                <li class="product_info_prod_name">Mac Book Pro</li>
+                                <li class="product_info_prod_count">
+                                    1개
+                                </li>
+                                <li class="product_info_prod_price">
+                                    90,000
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                    </div>
                 </li>

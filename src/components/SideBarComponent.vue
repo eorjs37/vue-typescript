@@ -6,6 +6,7 @@
             <li class="list-item">
                <span @click="move('/blog-list?type=all')">글 목록(55)</span>
             </li>
+            <li class="list-item" @click="move('/payment')">결제하기</li>
          </ul>
       </nav>
    </div>
