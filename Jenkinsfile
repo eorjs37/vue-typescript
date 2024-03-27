@@ -16,7 +16,9 @@ pipeline{
         stage('deploy'){
             steps{
                 echo 'deploy'
-                sh '${docker container ls --all --quiet --filter "name=web-front"}'
+                sh '''
+                    docker container ls --all --quiet --filter "name=web-front"
+                '''
             }
         }
     }
