@@ -1,9 +1,21 @@
 pipeline{
-   agent any
+    agent any
+    environment{
+        repository ="eorjs37/vue-typescript"
+        dockerImage = ''
+        BUILD_NUMBER ='1.0'
+    }
     stages(){
-        stage('git clone'){
+        stage('Building our image'){
             steps(){
-                echo 'git clone'
+                script{
+                    dockerImage = docker.build repository + ":$BUILD_NUMBER"
+                }
+            }
+        }
+        stage('deploy'){
+            steps{
+                echo 'deploy'
             }
         }
     }
