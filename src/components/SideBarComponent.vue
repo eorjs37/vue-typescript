@@ -5,11 +5,6 @@
             <li class="list-item" @click="move('/blog-write')">글쓰기</li>
             <li class="list-item">
                <span @click="move('/blog-list?type=all')">글 목록(55)</span>
-               <ul class="list sub-list">
-                  <li class="sub-list-item" @click="move('/blog-list?type=ionic')">- ionic (30)</li>
-                  <li class="sub-list-item" @click="move('/blog-list?type=vue')">- vue (10)</li>
-                  <li class="sub-list-item" @click="move('/blog-list?type=javascript')">- javascript (5)</li>
-               </ul>
             </li>
          </ul>
       </nav>
