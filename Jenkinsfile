@@ -20,6 +20,7 @@ pipeline{
                    docker stop web-front
                    docker rm web-front
                    docker run -d --name web-front -v /etc/letsencrypt:/etc/letsencrypt -v /etc/sectigo:/etc/sectigo  -p 443:443 eorjs37/vue-typescript:1.0
+                   docker image prune -a --force --filter "until=1h"
                 '''
             }
         }
