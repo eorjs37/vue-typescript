@@ -11,7 +11,6 @@ interface Blog {
 onMounted(() => {
    const list = ref<Blog>({ title: '', contents: '' });
 
-   console.log('onMounted');
    getBlogList().then((res) => {
       list.value = res.data[0];
    });
