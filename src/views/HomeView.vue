@@ -13,7 +13,7 @@ const move = (pagename: string) => {
 <template>
    <ul class="container page_list">
       <li @click="move('blog-write')"><a class="anchor">글쓰기</a></li>
-      <li class="page_item"><a class="anchor">페이지2</a></li>
+      <li class="page_item" @click="move('Payment')"><a class="anchor">결제하기</a></li>
       <li class="page_item"><a class="anchor">페이지3</a></li>
    </ul>
 </template>

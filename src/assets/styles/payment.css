@@ -1,96 +1,63 @@
-.payment_container{
-    max-width: 900px;
-    width: 100%;
-    margin: 0 auto;
+.payment_container {
+   max-width: 900px;
+   width: 100%;
+   margin: 0 auto;
 }
-.payment_header{
-    height: 60px;
-    width: 100%;
-    display: inline-block;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.payment_header {
+   height: 60px;
+   width: 100%;
+   display: inline-block;
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
 }
 
-.payment_header_main{
-    margin-top: 20px;
+.payment_header_main {
+   margin-top: 20px;
 }
 
-.payment_header_title{
-    font-size: 30px;
-    color: var(--041643);
-    line-height: 1;
-    text-align: center;
+.payment_header_title {
+   font-size: 30px;
+   color: var(--041643);
+   line-height: 1;
+   text-align: center;
 }
 
-.payment_product_wrap{
-    display: flex;
-    justify-content: space-between;
+.payment_product_wrap {
+   display: flex;
+   justify-content: space-between;
 }
 
-.payment_product_left,.payment_product_right{
-    width: 48%;
-    display: flex;
-    background-color: var(--FFFCFC);
-    padding: 20px;
-    box-sizing: border-box;
+.payment_product_wrap.second {
+   margin-top: 10px;
 }
 
-.payment_product_left{
-    display: flex;
-    flex-direction: column;
-
+.payment_product_left,
+.payment_product_right {
+   width: 35%;
+   display: flex;
+   background-color: var(--FFFCFC);
+   padding: 20px;
+   box-sizing: border-box;
 }
 
-.product_name{
-    font-size: 16px;
-    line-height: 1;
+.payment_product_left {
+   display: flex;
+   flex-direction: column;
+   width: 60%;
 }
 
-.product_info_wrap{
-    border: 1px solid var(--E0E0E0);
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
+.product_name {
+   font-size: 16px;
+   font-weight: 500;
+   line-height: 1;
 }
 
-.product_info{
-    display: flex;
-    padding: 10px;
-    box-sizing: border-box;
+.delivery_memo_wrap {
+   margin-top: 20px;
 }
 
-.product_info_img_wrap{
-    width: 50px;
-    height: 50px;
-    background-color: var(--E0E0E0);
-}
-
-.product_info_img{
-    width: 100%;
-    height: 100%;
-}
-
-.product_info_info_list{
-    display: flex;
-    flex-direction: column;
-    margin-left: 20px;
-}
-
-.product_info_prod_name{
-    font-size: 14px;
-    line-height: 1.4;
-    font-weight: 500;
-}
-.product_info_prod_count{
-    font-size: 14px;
-    line-height: 1.4;
-    color: var(--E0E0E0);
-}
-
-.product_info_prod_price{
-    color: var(--041643);
-    line-height: 1.4;
-    font-weight: 700;
+.delivery_memo_title {
+   line-height: 2;
 }
