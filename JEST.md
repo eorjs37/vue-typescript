@@ -1,0 +1,3 @@
+# mock Clear
+
+## mockClear
