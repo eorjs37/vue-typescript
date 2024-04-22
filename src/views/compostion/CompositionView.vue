@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { computed, reactive, readonly, ref, toRef, watch, watchEffect } from 'vue';
 interface person {
    age: number;
    name?: string;
 }
-import { computed, reactive, readonly, ref, toRef, watch, watchEffect } from 'vue';
+
 
 //Ref
 const val = ref<number>(99);

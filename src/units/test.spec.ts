@@ -33,3 +33,5 @@ describe('test', () => {
       expect(originApi).not.toBe(changeApi);
    });
 });
+
+export {}
