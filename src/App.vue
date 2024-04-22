@@ -9,8 +9,7 @@ interface Blog {
 }
 
 const sock = () => {
-   const sockJs = new SockJs('https://biggunsite.co.kr/ws/chat');
-   console.log(sockJs);
+   new SockJs('https://biggunsite.co.kr/ws/chat');
 };
 
 sock();
