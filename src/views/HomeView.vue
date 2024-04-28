@@ -2,14 +2,7 @@
 <script setup lang="ts">
 import { getNaverNews } from '@/api/naverNewsApi';
 import { reactive, ref, nextTick } from 'vue';
-
-interface navernewsList {
-   description: string;
-   link: string;
-   originallink: string;
-   pubDate: string;
-   title: string;
-}
+import type { navernewsList } from '@/interface/naverResponse.interface';
 
 const query = ref<string>('어플레이즈');
 const isLoading = ref<boolean>(true);
@@ -18,8 +11,8 @@ const setNaverNews = () => {
    isLoading.value = false;
    getNaverNews(query.value).then(async (res) => {
       await nextTick();
-      const { items } = res.data;
-
+      const { data } = res;
+      const { items } = data;
       list = items;
       isLoading.value = true;
    });
