@@ -1,34 +1,62 @@
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { getNaverNews } from '@/api/naverNewsApi';
+import { reactive, ref, nextTick } from 'vue';
 
-
-const items = ref<number[]>(Array.from({length:30},(_,v) => v+1));
-async function api():Promise<number[]> {
-    return new Promise(resolve=>{
-        
-        setTimeout(() => {
-            resolve(Array.from({length:10},(_,v:number) => 1+ (items.value.at(-1) as number) + v ))
-        }, 1000);
-    })
+interface navernewsList {
+   description: string;
+   link: string;
+   originallink: string;
+   pubDate: string;
+   title: string;
 }
 
+const query = ref<string>('어플레이즈');
+let list: navernewsList[] = reactive([]);
+const setNaverNews = () => {
+   getNaverNews(query.value).then(async (res) => {
+      await nextTick();
+      const { items } = res.data;
 
-async function load({done}:any) {
-    const res:number[] = await api();
+      list = items;
+   });
+};
 
-    items.value.push(...res)
-    done();
-}
+const changeQuery = (value: string) => {
+   query.value = value;
+};
+const enterEvent = ($event: KeyboardEvent) => {
+   if (query.value) {
+      $event.preventDefault();
+      list = [];
 
+      setNaverNews();
+   }
+};
 </script>
 
 <template>
-    <v-infinite-scroll :height="300" :items="items" :onLoad="load">
-        <template v-for="(item, index) in items" :key="item">
-            <div :class="['pa-2', index % 2 === 0 ? 'bg-grey-lighten-2' : '']">
-            Item number #{{ item }}
-            </div>
-        </template>
-    </v-infinite-scroll>
+   <v-container>
+      <div class="d-block">
+         <v-text-field clearable label="제목" @keyup.enter="enterEvent" :model-value="query" @update:modelValue="changeQuery"></v-text-field>
+      </div>
+      <div class="mt-2">
+         <v-table>
+            <thead>
+               <tr>
+                  <th class="text-left">기사제목</th>
+                  <th class="text-left">기사링크</th>
+                  <th class="text-left">pubDate</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr v-for="(item, index) in list" :key="index">
+                  <td v-html="item.title"></td>
+                  <td>{{ item.originallink }}</td>
+                  <td>{{ item.pubDate }}</td>
+               </tr>
+            </tbody>
+         </v-table>
+      </div>
+   </v-container>
 </template>
