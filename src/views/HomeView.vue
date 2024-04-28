@@ -12,13 +12,16 @@ interface navernewsList {
 }
 
 const query = ref<string>('어플레이즈');
+const isLoading = ref<boolean>(true);
 let list: navernewsList[] = reactive([]);
 const setNaverNews = () => {
+   isLoading.value = false;
    getNaverNews(query.value).then(async (res) => {
       await nextTick();
       const { items } = res.data;
 
       list = items;
+      isLoading.value = true;
    });
 };
 
@@ -31,8 +34,12 @@ const enterEvent = ($event: KeyboardEvent) => {
       list = [];
 
       setNaverNews();
+   } else {
+      alert(`값을 입력해주세요`);
    }
 };
+
+setNaverNews();
 </script>
 
 <template>
@@ -40,7 +47,7 @@ const enterEvent = ($event: KeyboardEvent) => {
       <div class="d-block">
          <v-text-field clearable label="제목" @keyup.enter="enterEvent" :model-value="query" @update:modelValue="changeQuery"></v-text-field>
       </div>
-      <div class="mt-2">
+      <div class="mt-2" v-if="isLoading">
          <v-table>
             <thead>
                <tr>
@@ -52,7 +59,9 @@ const enterEvent = ($event: KeyboardEvent) => {
             <tbody>
                <tr v-for="(item, index) in list" :key="index">
                   <td v-html="item.title"></td>
-                  <td>{{ item.originallink }}</td>
+                  <td>
+                     <a :href="item.originallink" target="_blank">{{ item.originallink }}</a>
+                  </td>
                   <td>{{ item.pubDate }}</td>
                </tr>
             </tbody>
