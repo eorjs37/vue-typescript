@@ -4,15 +4,15 @@ import router from './router';
 import './assets/fontawesome/fontawesome';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-//vuetify
+// vuetify
 import 'vuetify/styles';
 import { createVuetify } from 'vuetify/lib/framework.mjs'; 
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 
 const vuetify = createVuetify({
-    components,
-    directives
+  components,
+  directives
 })
 
 const app = createApp(App);
