@@ -4,5 +4,5 @@ echo "branch name :  ${branch}"
 if [ "main" == "$branch" ]; then
     . "$(dirname -- "$0")/_/husky.sh"
     echo "branch name :  ${branch}"
-    npm run lint-fix
+    npm run lint --fix
 fi
