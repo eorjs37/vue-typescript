@@ -122,3 +122,45 @@ docker run -d --name web-front -v /etc/letsencrypt:/etc/letsencrypt -v /etc/sect
 ```bash
 docker run -d --name web-front -v /etc/letsencrypt:/etc/letsencrypt -v /etc/sectigo:/etc/sectigo  -p 443:443 eorjs37/vue-typescript:1.0
 ```
+## husky
+```bash
+npx husky-init -y && npm install
+```
+
+### pre-commit
+```
+커밋하기전 main branch에만 eslint들 사용하도록 설정
+```
+
+```bash
+#!/usr/bin/env sh
+branch=$(git symbolic-ref --short HEAD)
+echo "branch name :  ${branch}"
+if [ "main" == "$branch" ]; then
+    . "$(dirname -- "$0")/_/husky.sh"
+    echo "branch name :  ${branch}"
+    npm run lint --fix
+fi
+```
+
+### pre-push
+```
+푸시하기전 main branch에만 eslint들 사용하도록 설정
+```
+
+```bash
+#!/usr/bin/env sh
+branch=$(git symbolic-ref --short HEAD)
+echo "branch name :  ${branch}"
+if [ "main" == "$branch" ]; then
+    . "$(dirname -- "$0")/_/husky.sh"
+    echo "branch name :  ${branch}"
+    npm run lint --fix
+fi
+```
+
+
+### 권한 오류
+```sh
+chmod ug+x .husky/pre-push
+```
