@@ -1,9 +1,9 @@
 <template>
-   <h1>{{ str }}</h1>
+  <h1>{{ str }}</h1>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
-const str = ref('소개');
+const str = ref("소개");
 </script>

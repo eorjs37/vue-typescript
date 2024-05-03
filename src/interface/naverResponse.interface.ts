@@ -6,7 +6,7 @@ export interface navernewsList {
     title: string;
  }
 
- export interface navernewsResponse {
+export interface navernewsResponse {
     display:number;
     items:navernewsList[];
     lastBuildDate:string;

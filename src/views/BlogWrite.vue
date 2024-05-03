@@ -1,51 +1,51 @@
 <template>
-   <form id="form" class="write-container" @submit.prevent="submit()">
-      <div class="form-control">
-         <label for="title">*제목</label>
-         <input type="text" id="title" v-model="writeForm.title" />
-      </div>
-      <div class="form-control">
-         <label for="contents">*내용</label>
-         <textarea name="contents" id="contents" rows="10" v-model="writeForm.contents"></textarea>
-      </div>
+  <form id="form" class="write-container" @submit.prevent="submit()">
+    <div class="form-control">
+      <label for="title">*제목</label>
+      <input type="text" id="title" v-model="writeForm.title" />
+    </div>
+    <div class="form-control">
+      <label for="contents">*내용</label>
+      <textarea name="contents" id="contents" rows="10" v-model="writeForm.contents"></textarea>
+    </div>
 
-      <div class="btn-group">
-         <button id="submit" type="button" @click="submit()">등록</button>
-      </div>
-   </form>
+    <div class="btn-group">
+      <button id="submit" type="button" @click="submit()">등록</button>
+    </div>
+  </form>
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue';
+import { reactive } from "vue";
 interface Write {
-   title: string;
-   contents: string;
+  title: string;
+  contents: string;
 }
 
 const writeForm: Write = reactive({
-   title: '',
-   contents: ''
+  title: "",
+  contents: ""
 });
 
 const submit = (): boolean => {
-   if (writeForm.title.length > 10 || writeForm.contents.length > 100) {
-      alert('제목은 10자 내용은 100자 이상 입력이 불가능합니다.');
-      return false;
-   } else if (!writeForm.title || !writeForm.contents) {
-      alert('제목 또는 내용을 입력해주세요');
-      return false;
-   }
+  if (writeForm.title.length > 10 || writeForm.contents.length > 100) {
+    alert("제목은 10자 내용은 100자 이상 입력이 불가능합니다.");
+    return false;
+  } else if (!writeForm.title || !writeForm.contents) {
+    alert("제목 또는 내용을 입력해주세요");
+    return false;
+  }
 
-   registerApi();
+  registerApi();
 
-   return true;
+  return true;
 };
 
 const registerApi = () => {};
 
 defineExpose({
-   submit,
-   registerApi
+  submit,
+  registerApi
 });
 </script>
 

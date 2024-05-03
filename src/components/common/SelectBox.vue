@@ -1,26 +1,26 @@
 <template>
-   <ul class="selectbox_wrap">
-      <li class="selectbox_selected" @click="isActiveList = !isActiveList">
-         <span>-선택-</span>
-         <img :src="`/images/${arrowIcon}`" class="arrow_icon" alt="arrow_icon" />
+  <ul class="selectbox_wrap">
+    <li class="selectbox_selected" @click="isActiveList = !isActiveList">
+      <span>-선택-</span>
+      <img :src="`/images/${arrowIcon}`" class="arrow_icon" alt="arrow_icon" />
+    </li>
+    <Transition name="list_animation">
+      <li class="selectbox_list" v-if="isActiveList">
+        <ul class="selectbox_list_wrap">
+          <li class="selectbox_list_item">-선택-</li>
+          <li class="selectbox_list_item">집앞에 남겨주세요</li>
+          <li class="selectbox_list_item">미리 전화주세요</li>
+        </ul>
       </li>
-      <Transition name="list_animation">
-         <li class="selectbox_list" v-if="isActiveList">
-            <ul class="selectbox_list_wrap">
-               <li class="selectbox_list_item">-선택-</li>
-               <li class="selectbox_list_item">집앞에 남겨주세요</li>
-               <li class="selectbox_list_item">미리 전화주세요</li>
-            </ul>
-         </li>
-      </Transition>
-   </ul>
+    </Transition>
+  </ul>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const isActiveList = ref<boolean>(false);
-const arrowIcon = ref<string>('arrow_icon.png');
+const arrowIcon = ref<string>("arrow_icon.png");
 </script>
 <style scoped>
 .selectbox_wrap {

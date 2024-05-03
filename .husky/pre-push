@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+branch=$(git symbolic-ref --short HEAD)
+if [ "main" == "$branch" ]; then
+    . "$(dirname -- "$0")/_/husky.sh"
+    echo "branch name :  ${branch}"
+    npm run lint-fix
+fi
