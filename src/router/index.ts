@@ -28,6 +28,11 @@ const router = createRouter({
       path: "/compostion",
       name: "Compostion",
       component: () => import("@/views/compostion/CompositionView.vue")
+    },
+    {
+      path: "/calendar",
+      name: "Calendar",
+      component:  ()=>import("@/views/calendar/CalendarView.vue")
     }
   ]
 });

@@ -15,9 +15,13 @@ const vuetify = createVuetify({
   directives
 })
 
+// vue-calendar
+import VCalendar from "v-calendar";
+import "v-calendar/style.css";
 const app = createApp(App);
 
 app.component("font-awesome-icon", FontAwesomeIcon);
+app.use(VCalendar, {});
 app.use(router);
 app.use(vuetify)
 app.mount("#app");
