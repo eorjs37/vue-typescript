@@ -2,5 +2,7 @@
 import CalendarComp from "@/components/calendar/CalendarComp.vue";
 </script>
 <template>
-  <CalendarComp/>
+  <v-container>
+    <CalendarComp/>
+  </v-container>
 </template>

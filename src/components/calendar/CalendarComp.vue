@@ -2,7 +2,7 @@
 <script lang="ts" setup>
 </script>
 <template>
-  <VCalendar/>
+  <VCalendar expanded/>
 </template>
 <style scoped>
 </style>

@@ -3,9 +3,11 @@
 import { getNaverNews } from "@/api/naverNewsApi";
 import { reactive, ref, nextTick } from "vue";
 import type { navernewsList } from "@/interface/naverResponse.interface";
+import { useRouter } from "vue-router";
 
 const query = ref<string>("어플레이즈");
 const isLoading = ref<boolean>(true);
+const router = useRouter();
 let list: navernewsList[] = reactive([]);
 const setNaverNews = () => {
   isLoading.value = false;
@@ -17,7 +19,6 @@ const setNaverNews = () => {
     isLoading.value = true;
   });
 };
-
 const changeQuery = (value: string) => {
   query.value = value;
 };
@@ -32,11 +33,20 @@ const enterEvent = ($event: KeyboardEvent) => {
   }
 };
 
+const movePage = (page:string)=>{
+  router.push({name:page}).catch(()=>{})
+}
+
 setNaverNews();
 </script>
 
 <template>
   <v-container>
+    <div class="d-flex justify-end mb-6">
+      <v-btn color="blue-darken-3" @click="movePage('Calendar')">
+        스케줄(베타)
+      </v-btn>
+    </div>
     <div class="d-block">
       <v-text-field clearable label="제목" @keyup.enter="enterEvent" :model-value="query" @update:modelValue="changeQuery"></v-text-field>
     </div>
