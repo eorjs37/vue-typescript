@@ -11,12 +11,7 @@ const setTimeList = () =>{
     timeList.push(time)
   }
 }
-
-
 setTimeList();
-
-
-
 </script>
 <template>
   <v-container>
@@ -25,7 +20,7 @@ setTimeList();
       fixed-header>
       <thead>
         <tr>
-          <th class="bg-grey-lighten-4 text-left font-weight-black width_10per border" rowspan="2">
+          <th class="bg-grey-lighten-4 text-left font-weight-black width_10per border" rowspan="3">
             시간  
           </th>
           <th class="bg-grey-lighten-4 text-center font-weight-black width_90per border" colspan="3">
@@ -33,17 +28,17 @@ setTimeList();
           </th>
         </tr>
         <tr>
-          <th class="bg-grey-lighten-4 text-center font-weight-black border">소회의실1</th>
-          <th class="bg-grey-lighten-4 text-center font-weight-black border">소회의실2</th>
-          <th class="bg-grey-lighten-4 text-center font-weight-black border">4층</th>
+          <th class="bg-grey-lighten-4 text-center font-weight-black border width_33per" >소회의실1</th>
+          <th class="bg-grey-lighten-4 text-center font-weight-black border width_33per">소회의실2</th>
+          <th class="bg-grey-lighten-4 text-center font-weight-black border width_33per">4층</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item,index) in timeList" :key="`time${index}`">
           <td class="border">{{ item }}</td>
-          <td class="border"></td>
-          <td class="border"></td>
-          <td class="border"></td>
+          <td class="border bg-red"></td>
+          <td class="border bg-indigo-lighten-5"></td>
+          <td class="border bg-blue-lighten-2"></td>
         </tr>
       </tbody>
     </v-table>
