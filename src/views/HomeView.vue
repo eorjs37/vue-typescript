@@ -44,7 +44,7 @@ setNaverNews();
   <v-container>
     <div class="d-flex justify-end mb-6">
       <v-btn color="blue-darken-3" @click="movePage('Calendar')">
-        스케줄(베타)
+        스케줄(진행중)
       </v-btn>
     </div>
     <div class="d-block">
