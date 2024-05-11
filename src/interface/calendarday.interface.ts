@@ -1,3 +1,4 @@
+import { ReservationItem } from "./reservation.interface";
 export interface CalendarDay {
   id: string;
   date:Date;
@@ -32,4 +33,5 @@ export interface CalendarDate{
   key:string,
   highlight:string|object;
   dates:Date;
+  list?:ReservationItem[]
 }
