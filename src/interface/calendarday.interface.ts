@@ -27,3 +27,9 @@ export interface CalendarDay {
   classes: Array<string | Object>;
   locale: Locale;
 }
+
+export interface CalendarDate{
+  key:string,
+  highlight:string|object;
+  dates:Date;
+}

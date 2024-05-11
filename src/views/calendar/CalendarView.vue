@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import RegisterSchedule from "@/components/calendar/RegisterSchedule.vue";
 import CalendarComp from "@/components/calendar/CalendarComp.vue";
+import ReservationComp from "@/components/calendar/ReservationComp.vue";
 import { reactive } from "vue";
 const timeList = reactive<string[]>([
 ]);
@@ -17,6 +17,6 @@ setTimeList();
 <template>
   <v-container>
     <CalendarComp/>
-    <RegisterSchedule/>
+    <ReservationComp/>
   </v-container>
 </template>
