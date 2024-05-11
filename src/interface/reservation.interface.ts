@@ -3,3 +3,11 @@ export interface ReservationItem {
     title:string;
     room:string
 }
+
+export interface ListItem {
+    name:string;
+    id:number,
+    icon?:string,
+    roomname:string,
+    date?:Date
+}
