@@ -39,25 +39,31 @@ const onDayClick = (val:CalendarDay)=>{
   isLoading.value = true;
   const findDate = dateAttribute.value.find(item=>{
     const date = item.dates;
-    const yyyy = date.getFullYear();
-    const mm = date.getMonth() + 1;
-    const dd = date.getDate();
+    if(date && diffDate){
+      const yyyy = date?.getFullYear();
+      const mm = date?.getMonth() + 1;
+      const dd = date?.getDate();
 
-    const diff = diffDate;
-    const diffYyyy = diff.getFullYear();
-    const diffmm = diff.getMonth() + 1;
-    const diffdd = diff.getDate();
+      const diff = diffDate;
+      const diffYyyy = diff.getFullYear();
+      const diffmm = diff.getMonth() + 1;
+      const diffdd = diff.getDate();
 
-    if(yyyy === diffYyyy && mm === diffmm && dd === diffdd){
-      return item
+      if(yyyy === diffYyyy && mm === diffmm && dd === diffdd){
+        return item
+      }else{
+        return undefined
+      }
     }
+    
 
     return undefined;
   })
   
   if(findDate){
     const { list } = findDate;
-    dayReservationList.value = list;
+    if(list) dayReservationList.value = list;
+    
   }else{
     dayReservationList.value = []
   }
