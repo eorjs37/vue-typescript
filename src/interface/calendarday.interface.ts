@@ -31,7 +31,7 @@ export interface CalendarDay {
 
 export interface CalendarDate{
   key:string,
-  highlight:string|object;
-  dates:Date;
+  highlight?:string|object;
+  dates?:Date;
   list?:ListItem[]
 }
