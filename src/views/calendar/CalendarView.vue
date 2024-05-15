@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import CalendarComp from "@/components/calendar/CalendarComp.vue";
 import ReservationComp from "@/components/calendar/ReservationComp.vue";
+import RegisterSchedule from "@/components/calendar/RegisterSchedule.vue";
 import type { CalendarDay,CalendarDate } from "@/interface/calendarday.interface";
 import { ref } from "vue";
 import { getCalendarList } from "@/api/calendarApi";
@@ -70,8 +71,17 @@ const onDayClick = (val:CalendarDay)=>{
   isLoading.value = false;
 }
 
+
+/**
+ * @description 모달 오픈
+ */
+const openDialog = ()=>{
+  dialog.value = true;
+}
+
 const dateAttribute = ref<CalendarDate[]>([]);
 const dayReservationList = ref<ListItem[]>([]);
+const dialog = ref<boolean>(false);
 
 setformatCalendar();
 
@@ -79,7 +89,13 @@ const isLoading = ref<boolean>(false);
 </script>
 <template>
   <v-container>
+    <RegisterSchedule :dialog="dialog" @close-dialog="dialog=false"/>
     <CalendarComp :currentdate="curDate" :reslist="dateAttribute" @click-day="onDayClick"/>
+    <div class="d-flex mt-5">
+      <v-btn color="indigo" @click="openDialog">
+        예약등록
+      </v-btn>
+    </div>
     <ReservationComp :selectdate="curDate" :isloading="isLoading" :dayreservationlist="dayReservationList"/>
   </v-container>
 </template>
