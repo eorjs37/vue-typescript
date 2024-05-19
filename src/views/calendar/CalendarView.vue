@@ -6,6 +6,7 @@ import type { CalendarDay,CalendarDate } from "@/interface/calendarday.interface
 import { ref } from "vue";
 import { getCalendarList } from "@/api/calendarApi";
 import type { ListItem } from "@/interface/reservation.interface";
+import type { SaveSchedule } from "@/interface/schedule.interface";
 const curDate = ref<Date>(new Date());
 
 /**
@@ -79,6 +80,15 @@ const openDialog = ()=>{
   dialog.value = true;
 }
 
+/**
+ * 
+ * @param item 저장될 스케줄
+ */
+const onSaveSchedule = (item:SaveSchedule) =>{
+  console.log(item);
+  
+}
+
 const dateAttribute = ref<CalendarDate[]>([]);
 const dayReservationList = ref<ListItem[]>([]);
 const dialog = ref<boolean>(false);
@@ -89,7 +99,7 @@ const isLoading = ref<boolean>(false);
 </script>
 <template>
   <v-container>
-    <RegisterSchedule :dialog="dialog" @close-dialog="dialog=false"/>
+    <RegisterSchedule @save-schedule="onSaveSchedule" :selectdate="curDate" :dialog="dialog" @close-dialog="dialog=false"/>
     <CalendarComp :currentdate="curDate" :reslist="dateAttribute" @click-day="onDayClick"/>
     <div class="d-flex mt-5">
       <v-btn color="indigo" @click="openDialog">
