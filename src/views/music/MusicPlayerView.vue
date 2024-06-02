@@ -1,8 +1,10 @@
 <template>
-  <v-btn @click="controlVideo">
-    {{ videoStatus ? '중지' : '재생' }}
-  </v-btn>
-  <video id="streamingvideo" hidden></video>
+  <v-container>
+    <v-btn @click="controlVideo">
+      {{ videoStatus ? '중지' : '재생' }}
+    </v-btn>
+    <video id="streamingvideo" hidden></video>
+  </v-container>
 </template>
 <script setup lang="ts">
 import Hls from "hls.js";
