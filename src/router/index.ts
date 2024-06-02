@@ -33,6 +33,11 @@ const router = createRouter({
       path: "/calendar",
       name: "Calendar",
       component:  ()=>import("@/views/calendar/CalendarView.vue")
+    },
+    {
+      path: "/player",
+      name: "MusicPlayer",
+      component:  ()=>import("@/views/music/MusicPlayerView.vue")
     }
   ]
 });
