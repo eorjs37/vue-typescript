@@ -1,6 +1,6 @@
 
 <script setup lang="ts">
-import { ref, toRef} from "vue";
+import { onMounted, ref, toRef} from "vue";
 
 interface ValidateItem{
   title:string;
@@ -74,6 +74,7 @@ const saveSchedule = ()=>{
       }
     ]);
 
+
     emits("save-schedule",{
       scheduleStartTime:`${startHour.value}:${startMin.value}`,
       scheduleEndTime:`${endHour.value}:${endMin.value}`,
@@ -105,10 +106,20 @@ const roomUpdateMenu = (val:string)=>{
   roomCode.value = val;
 }
 
+/**
+ * @description 다이얼로그 상태변화
+ */
+const onAfterLeave = ()=>{
+  console.log("update dialog");
+  startHour.value = "";
+  startMin.value = "";
+  endHour.value = "";
+  endMin.value = "";
+}
 
 </script>
 <template>
-  <v-dialog max-width="600" :model-value="dialog" persistent>
+  <v-dialog max-width="600" :model-value="dialog" persistent @afterLeave="onAfterLeave">
     <v-card title="예약등록">
       <template v-slot:text>
         <div class="d-flex flex-column">

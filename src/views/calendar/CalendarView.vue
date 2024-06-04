@@ -4,7 +4,7 @@ import ReservationComp from "@/components/calendar/ReservationComp.vue";
 import RegisterSchedule from "@/components/calendar/RegisterSchedule.vue";
 import type { CalendarDay,CalendarDate } from "@/interface/calendarday.interface";
 import { ref } from "vue";
-import { getCalendarList } from "@/api/calendarApi";
+import { getCalendarList, saveSchedule } from "@/api/calendarApi";
 import type { ListItem } from "@/interface/reservation.interface";
 import type { SaveSchedule } from "@/interface/schedule.interface";
 const curDate = ref<Date>(new Date());
@@ -13,33 +13,45 @@ const curDate = ref<Date>(new Date());
  * @description 캘린더 데이터 포멧
  */
 const setformatCalendar = ()=>{
-  getCalendarList().then(res=>{
-    const { list } = res.data;
-    const len = list.length;
-    for(let i = 0 ; i < len ;i++){
-      const obj:CalendarDate = {
-        key:list[i]["key"],
-        highlight:{
-          color: "purple",
-          fillMode: "light", 
-        },
-        dates:new Date(list[i]["dates"]),
-        list:list[i]["list"]
+  getCalendarList()
+    .then(res=>{
+      const { list } = res.data;
+      const len = list.length;
+      for(let i = 0 ; i < len ;i++){
+        const obj:CalendarDate = {
+          key:list[i]["key"],
+          highlight:{
+            color: "purple",
+            fillMode: "light", 
+          },
+          dates:new Date(list[i]["dates"]),
+          list:list[i]["list"]
+        }
+        dateAttribute.value.push(obj)
       }
-      dateAttribute.value.push(obj)
-    }
-  })
+    })
+    .finally(()=>{
+      
+      const today:CalendarDate ={
+        key:"none",
+        highlight:true,
+        dates:new Date(),
+        list:[]
+      }
+      dateAttribute.value.push(today);
+
+      const returnDate = findDate(new Date());
+  
+      setDayReservationList(returnDate);
+    })
 }
 
 /**
- * @description 캘린더 데이터 선택
- * @param val 캘린더데이터
+ * @description 날짜 찾기
+ * @param date 날짜
  */
-const onDayClick = (val:CalendarDay)=>{
-  const { date:diffDate } = val;
-  curDate.value = diffDate; 
-  isLoading.value = true;
-  const findDate = dateAttribute.value.find(item=>{
+const findDate = (diffDate:Date)=>{
+  return dateAttribute.value.find(item =>{
     const date = item.dates;
     if(date && diffDate){
       const yyyy = date?.getFullYear();
@@ -61,14 +73,34 @@ const onDayClick = (val:CalendarDay)=>{
 
     return undefined;
   })
-  
-  if(findDate){
-    const { list } = findDate;
+}
+
+/**
+ * 
+ * @param returnDate 비교값
+ */
+const setDayReservationList = (returnDate:any)=>{
+  if(returnDate){
+    const { list } = returnDate;
     if(list) dayReservationList.value = list;
     
   }else{
     dayReservationList.value = []
   }
+}
+
+/**
+ * @description 캘린더 데이터 선택
+ * @param val 캘린더데이터
+ */
+const onDayClick = (val:CalendarDay)=>{
+  const { date:diffDate } = val;
+  curDate.value = diffDate; 
+  isLoading.value = true;
+
+  const returnDate = findDate(diffDate);
+  
+  setDayReservationList(returnDate);
   isLoading.value = false;
 }
 
@@ -84,9 +116,16 @@ const openDialog = ()=>{
  * 
  * @param item 저장될 스케줄
  */
-const onSaveSchedule = (item:SaveSchedule) =>{
+const onSaveSchedule = async (item:SaveSchedule) =>{
   console.log(item);
-  
+  try {
+    const { data } = await saveSchedule(item);
+    console.log(data);
+    
+  } catch (error) {
+    console.error("error : ",error);
+    
+  }
 }
 
 const dateAttribute = ref<CalendarDate[]>([]);
