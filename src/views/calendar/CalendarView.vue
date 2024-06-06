@@ -10,47 +10,52 @@ import type { SaveSchedule } from "@/interface/schedule.interface";
 import { getMeetingMonth } from "@/api/meetingApi";
 const curDate = ref<Date>(new Date());
 
-
-const getFormatDateAttribute = (list = []) =>{
-  // const resultData = [];
-  const len = list.length;
+/**
+ * 
+ * @param meetingList 미팅예약 리스트
+ * @return CalendarDate[]
+ */
+const getFormatDateAttribute = (meetingList = []) =>{
+  const resultData:CalendarDate[] = [];
+  const len = meetingList.length;
   for(let  i = 0 ; i < len ; i++){
-    const scheduleDate = list[i]["scheduleDate"];
-    const findDateAttribute = dateAttribute.value.find(item => item["key"] === scheduleDate);
+    const scheduleDate = meetingList[i]["scheduleDate"];
+    
+    const findDateAttribute = resultData.find(item => item["key"] === scheduleDate);    
     if(findDateAttribute){
-      //
-      const { list:listitem } = findDateAttribute;
-      if(listitem){
+      const { list } = findDateAttribute;
+      
+      if(list){
         const listObj:ListItem = {
-          id:listitem[i]["id"],
-          name:`${listitem[i]["scheduleStartTime"]}:${listitem[i]["scheduleEndTime"]}`,
-          roomname:`${listitem[i]["meetingRoomName"]}`
+          id:meetingList[i]["id"],
+          name:`${meetingList[i]["scheduleStartTime"]}~${meetingList[i]["scheduleEndTime"]}`,
+          roomname:meetingList[i]["meetingRoomName"]
         }
-        list?.push(listObj);
+        list.push(listObj)
       }
     } else{
-      // const listObj:ListItem = {
-      //   id:list[i]["id"],
-      //   name:`${ String(list[i]["scheduleStartTime"])}:${list[i]["scheduleEndTime"]}`,
-      //   roomname:`${list[i]["meetingRoomName"]}`
-      // }
+      const listObj:ListItem = {
+        id:meetingList[i]["id"],
+        name:`${ String(meetingList[i]["scheduleStartTime"])}~${meetingList[i]["scheduleEndTime"]}`,
+        roomname:`${meetingList[i]["meetingRoomName"]}`
+      }
 
-      // const obj:CalendarDate = {
-      //   key:scheduleDate,
-      //   highlight:{
-      //     color: "purple",
-      //     fillMode: "light", 
-      //   },
-      //   dates:new Date(scheduleDate),
-      //   list:[
-      //     listObj
-      //   ]
-      // }
-      // resultData.push(obj);
+      const obj:CalendarDate = {
+        key:scheduleDate,
+        highlight:{
+          color: "purple",
+          fillMode: "light", 
+        },
+        dates:new Date(scheduleDate),
+        list:[
+          listObj
+        ]
+      }
+      resultData.push(obj);
     }
     
   }
-  return [];
+  return resultData;
 }
 
 /**
@@ -129,7 +134,10 @@ const onDayClick = (val:CalendarDay)=>{
  * @description 모달 오픈
  */
 const openDialog = ()=>{
+  dataType.value = 1;
   dialog.value = true;
+  startTime.value ="";
+  endTime.value = ""
 }
 
 /**
@@ -138,13 +146,18 @@ const openDialog = ()=>{
  */
 const onSaveSchedule = async (item:SaveSchedule) =>{
   try {
-    const { data } = await saveSchedule(item);
-    const { resultCd } = data;
-    if(resultCd === "0000"){
-      snackBar.value = true;
+    if(dataType.value === 1){
+      const { data } = await saveSchedule(item);
+      const { resultCd } = data;
+      if(resultCd === "0000"){
+        snackBar.value = true;
+      }else{
+        alert("시간을 확인해주세요");
+      }
     }else{
-      alert("시간을 확인해주세요");
+      //
     }
+    
   } catch (error) {
     console.error("error : ",error);
     
@@ -165,12 +178,30 @@ const onChangeMonth = (yyyymm:string)=>{
     })  
 }
 
+/**
+ * @description 스케줄 수정
+ */
+const onUpdateSchedule = (val:any)=>{
+  dataType.value = 2;
+  const { name } = val;
+  
+  const start = name.split("~")[0];
+  const end = name.split("~")[1];
+
+  startTime.value =start;
+  endTime.value = end;
+  dialog.value = true;
+}
+
+
 const dateAttribute = ref<CalendarDate[]>([]);
 const dayReservationList = ref<ListItem[]>([]);
 const dialog = ref<boolean>(false);
 const snackBar = ref<boolean>(false);
 const snackBarText = ref<string>("예약되었습니다");
 
+const startTime = ref<string>("");
+const endTime = ref<string>("");
 
 const today = new Date();
 const yyyy = today.getFullYear();
@@ -178,17 +209,18 @@ const mm = today.getMonth()+1 > 9 ? today.getMonth()+1 : `0${today.getMonth()+1}
 setformatCalendar(`${yyyy}-${mm}`);
 
 const isLoading = ref<boolean>(false);
+const dataType = ref<Number>(1);
 </script>
 <template>
   <v-container>
-    <RegisterSchedule @save-schedule="onSaveSchedule" :selectdate="curDate" :dialog="dialog" @close-dialog="dialog=false"/>
+    <RegisterSchedule @save-schedule="onSaveSchedule" :starttime="startTime" :endtime="endTime" :selectdate="curDate" :dialog="dialog" @close-dialog="dialog=false"/>
     <CalendarComp :currentdate="curDate" :reslist="dateAttribute" @click-day="onDayClick" @change-month="onChangeMonth"/>
     <div class="d-flex mt-5">
       <v-btn color="indigo" @click="openDialog">
         예약등록
       </v-btn>
     </div>
-    <ReservationComp :selectdate="curDate" :isloading="isLoading" :dayreservationlist="dayReservationList"/>
+    <ReservationComp @update-schedule="onUpdateSchedule"  :selectdate="curDate" :isloading="isLoading" :dayreservationlist="dayReservationList"/>
     <v-snackbar :model-value="snackBar" :timeout="2000">
       {{ snackBarText }}
     </v-snackbar>

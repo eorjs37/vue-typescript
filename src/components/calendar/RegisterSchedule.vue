@@ -1,6 +1,6 @@
 
 <script setup lang="ts">
-import { ref, toRef} from "vue";
+import { ref, toRef, watch} from "vue";
 
 interface ValidateItem{
   title:string;
@@ -18,6 +18,21 @@ const props = defineProps({
     required:false,
     default:new Date()
   },
+  roomname:{
+    type:String,
+    required:false,
+    default:"",
+  },
+  starttime:{
+    type:String,
+    required:false,
+    default:""
+  },
+  endtime:{
+    type:String,
+    required:false,
+    default:""
+  }
 })
 const emits = defineEmits(["close-dialog","save-schedule"])
 
@@ -114,13 +129,37 @@ const roomUpdateMenu = (val:string)=>{
  * @description 다이얼로그 상태변화
  */
 const onAfterLeave = ()=>{
-  console.log("update dialog");
   startHour.value = "";
   startMin.value = "";
   endHour.value = "";
   endMin.value = "";
 }
 
+watch(dialog,newValue=>{
+  if(newValue){
+    
+    if(props.starttime){
+      const split = props.starttime.split(":");
+      
+      startHour.value = split[0];
+      startMin.value = split[1];
+    }else{
+      startHour.value = "";
+      startMin.value = "";
+    }
+
+    if(props.endtime){
+      const split = props.endtime.split(":");
+      
+      endHour.value = split[0];
+      endMin.value = split[1];
+    }else{
+      endHour.value = "";
+      endMin.value = "";
+    }
+    
+  }
+})
 
 </script>
 <template>

@@ -9,6 +9,8 @@ interface ListItem {
   date?:Date
 }
 
+const emit = defineEmits(["update-schedule"]);
+
 
 defineProps({
   isloading:{
@@ -50,6 +52,13 @@ defineProps({
         <v-list-item-title>
           {{ item.name }} / {{ item.roomname }}
         </v-list-item-title>
+        <template v-slot:append>
+          <v-btn
+            icon="mdi-pencil"
+            variant="text"
+            @click="emit('update-schedule',{ roomname:item.roomname,name:item.name})"
+          ></v-btn>
+        </template>
       </v-list-item>
     </v-list>
     <v-list v-else>
