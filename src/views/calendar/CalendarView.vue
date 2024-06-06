@@ -4,45 +4,65 @@ import ReservationComp from "@/components/calendar/ReservationComp.vue";
 import RegisterSchedule from "@/components/calendar/RegisterSchedule.vue";
 import type { CalendarDay,CalendarDate } from "@/interface/calendarday.interface";
 import { ref } from "vue";
-import { getCalendarList, saveSchedule } from "@/api/calendarApi";
+import { saveSchedule } from "@/api/calendarApi";
 import type { ListItem } from "@/interface/reservation.interface";
 import type { SaveSchedule } from "@/interface/schedule.interface";
+import { getMeetingMonth } from "@/api/meetingApi";
 const curDate = ref<Date>(new Date());
+
+
+const getFormatDateAttribute = (list = []) =>{
+  // const resultData = [];
+  const len = list.length;
+  for(let  i = 0 ; i < len ; i++){
+    const scheduleDate = list[i]["scheduleDate"];
+    const findDateAttribute = dateAttribute.value.find(item => item["key"] === scheduleDate);
+    if(findDateAttribute){
+      //
+      const { list:listitem } = findDateAttribute;
+      if(listitem){
+        const listObj:ListItem = {
+          id:listitem[i]["id"],
+          name:`${listitem[i]["scheduleStartTime"]}:${listitem[i]["scheduleEndTime"]}`,
+          roomname:`${listitem[i]["meetingRoomName"]}`
+        }
+        list?.push(listObj);
+      }
+    } else{
+      // const listObj:ListItem = {
+      //   id:list[i]["id"],
+      //   name:`${ String(list[i]["scheduleStartTime"])}:${list[i]["scheduleEndTime"]}`,
+      //   roomname:`${list[i]["meetingRoomName"]}`
+      // }
+
+      // const obj:CalendarDate = {
+      //   key:scheduleDate,
+      //   highlight:{
+      //     color: "purple",
+      //     fillMode: "light", 
+      //   },
+      //   dates:new Date(scheduleDate),
+      //   list:[
+      //     listObj
+      //   ]
+      // }
+      // resultData.push(obj);
+    }
+    
+  }
+  return [];
+}
 
 /**
  * @description 캘린더 데이터 포멧
  */
-const setformatCalendar = ()=>{
-  getCalendarList()
-    .then(res=>{
-      const { list } = res.data;
-      const len = list.length;
-      for(let i = 0 ; i < len ;i++){
-        const obj:CalendarDate = {
-          key:list[i]["key"],
-          highlight:{
-            color: "purple",
-            fillMode: "light", 
-          },
-          dates:new Date(list[i]["dates"]),
-          list:list[i]["list"]
-        }
-        dateAttribute.value.push(obj)
-      }
-    })
-    .finally(()=>{
-      
-      const today:CalendarDate ={
-        key:"none",
-        highlight:true,
-        dates:new Date(),
-        list:[]
-      }
-      dateAttribute.value.push(today);
+const setformatCalendar = (yyyymm:string)=>{
 
-      const returnDate = findDate(new Date());
-  
-      setDayReservationList(returnDate);
+  getMeetingMonth(yyyymm)
+    .then(res=>{
+      const list = res.data;
+      const result = getFormatDateAttribute(list);
+      dateAttribute.value = [...result];
     })
 }
 
@@ -117,34 +137,60 @@ const openDialog = ()=>{
  * @param item 저장될 스케줄
  */
 const onSaveSchedule = async (item:SaveSchedule) =>{
-  console.log(item);
   try {
     const { data } = await saveSchedule(item);
-    console.log(data);
-    
+    const { resultCd } = data;
+    if(resultCd === "0000"){
+      snackBar.value = true;
+    }else{
+      alert("시간을 확인해주세요");
+    }
   } catch (error) {
     console.error("error : ",error);
     
   }
 }
 
+/**
+ * 
+ * @param yyyymm : yyyy-mm
+ */
+const onChangeMonth = (yyyymm:string)=>{
+  getMeetingMonth(yyyymm)
+    .then(res=>{
+      const list = res.data;
+      const result = getFormatDateAttribute(list);
+      dateAttribute.value = [...result];
+    
+    })  
+}
+
 const dateAttribute = ref<CalendarDate[]>([]);
 const dayReservationList = ref<ListItem[]>([]);
 const dialog = ref<boolean>(false);
+const snackBar = ref<boolean>(false);
+const snackBarText = ref<string>("예약되었습니다");
 
-setformatCalendar();
+
+const today = new Date();
+const yyyy = today.getFullYear();
+const mm = today.getMonth()+1 > 9 ? today.getMonth()+1 : `0${today.getMonth()+1}`;
+setformatCalendar(`${yyyy}-${mm}`);
 
 const isLoading = ref<boolean>(false);
 </script>
 <template>
   <v-container>
     <RegisterSchedule @save-schedule="onSaveSchedule" :selectdate="curDate" :dialog="dialog" @close-dialog="dialog=false"/>
-    <CalendarComp :currentdate="curDate" :reslist="dateAttribute" @click-day="onDayClick"/>
+    <CalendarComp :currentdate="curDate" :reslist="dateAttribute" @click-day="onDayClick" @change-month="onChangeMonth"/>
     <div class="d-flex mt-5">
       <v-btn color="indigo" @click="openDialog">
         예약등록
       </v-btn>
     </div>
     <ReservationComp :selectdate="curDate" :isloading="isLoading" :dayreservationlist="dayReservationList"/>
+    <v-snackbar :model-value="snackBar" :timeout="2000">
+      {{ snackBarText }}
+    </v-snackbar>
   </v-container>
 </template>

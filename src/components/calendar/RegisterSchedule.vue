@@ -1,6 +1,6 @@
 
 <script setup lang="ts">
-import { onMounted, ref, toRef} from "vue";
+import { ref, toRef} from "vue";
 
 interface ValidateItem{
   title:string;
@@ -74,8 +74,12 @@ const saveSchedule = ()=>{
       }
     ]);
 
+    const yyyy = props.selectdate.getFullYear();
+    const mm = props.selectdate.getMonth()+1 > 9 ? props.selectdate.getMonth()+1 : `0${props.selectdate.getMonth()+1}`;
+    const dd = props.selectdate.getDate() > 9 ? props.selectdate.getDate()  : `0${props.selectdate.getDate()}`;
 
     emits("save-schedule",{
+      scheduleDate:`${yyyy}-${mm}-${dd}`,
       scheduleStartTime:`${startHour.value}:${startMin.value}`,
       scheduleEndTime:`${endHour.value}:${endMin.value}`,
       meetingRoomCode:`${roomCode.value}`
@@ -116,6 +120,7 @@ const onAfterLeave = ()=>{
   endHour.value = "";
   endMin.value = "";
 }
+
 
 </script>
 <template>

@@ -2,6 +2,7 @@
 <script lang="ts" setup>
 import { toRef,ref } from "vue";
 import type { CalendarDay,CalendarDate } from "@/interface/calendarday.interface";
+import type { Page } from "v-calendar/dist/types/src/utils/page";
 /**
  * @description props 전달
  */
@@ -20,7 +21,7 @@ const props = defineProps({
   }
 })
 
-const emit =  defineEmits(["click-day"])
+const emit =  defineEmits(["click-day","change-month"])
 
 const dayClick = (val:CalendarDay)=>{
   const { date } = val;
@@ -32,11 +33,13 @@ const currentDate = toRef(props,"currentdate");
 const curDate = ref<Date>(new Date());
 curDate.value = currentDate.value;
 
-
+const onDidMove = (val:Page[])=>{
+  emit("change-month",val[0].id)
+}
 
 </script>
 <template>
-  <VCalendar expanded :attributes="reslist" @dayclick="dayClick"  mode="date"/>
+  <VCalendar  expanded :attributes="reslist" @dayclick="dayClick" @did-move="onDidMove"   mode="date"/>
 </template>
 <style scoped>
 </style>
