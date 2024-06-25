@@ -11,7 +11,17 @@ const saveSchedule = (item:SaveSchedule)=>{
   return instance.post("/api/schedule",item);
 }
 
+const updateSchedule = (item:SaveSchedule) =>{
+  return instance.put("/api/schedule",item);
+}
+
+const deleteSchedule = (id:number) =>{
+  return instance.delete(`/api/schedule/${id}`)
+}
+
 export{
   getCalendarList,
-  saveSchedule
+  saveSchedule,
+  updateSchedule,
+  deleteSchedule
 }

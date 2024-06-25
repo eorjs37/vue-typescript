@@ -1,45 +1,44 @@
+<script setup lang="ts">
+import { reactive } from "vue";
+import VueCal from "vue-cal"
+import "vue-cal/dist/vuecal.css"
 
-<script lang="ts" setup>
-import { toRef,ref } from "vue";
-import type { CalendarDay,CalendarDate } from "@/interface/calendarday.interface";
-import type { Page } from "v-calendar/dist/types/src/utils/page";
-/**
- * @description props 전달
- */
-const props = defineProps({
-  currentdate:{
-    type:Date,
-    required:false,
-    default:new Date()
+
+interface SplitDays{
+  id:number;
+  class:string;
+  label?:string;
+}
+
+
+const splitDays = reactive<SplitDays[]>([
+  {
+    id:1,
+    class:"",
+    label:"소회의실1"
   },
-  reslist:{
-    type:Array<CalendarDate>,
-    required:false,
-    default:()=>{
-      return []
-    } 
+  {
+    id:2,
+    class:"",
+    label:"소회의실2"
+  },
+  {
+    id:2,
+    class:"",
+    label:"4층 회의실"
   }
-})
+]);
 
-const emit =  defineEmits(["click-day","change-month"])
-
-const dayClick = (val:CalendarDay)=>{
-  const { date } = val;
-  curDate.value = date;
-  emit("click-day",val)
-}
-
-const currentDate = toRef(props,"currentdate");
-const curDate = ref<Date>(new Date());
-curDate.value = currentDate.value;
-
-const onDidMove = (val:Page[])=>{
-  emit("change-month",val[0].id)
-}
 
 </script>
 <template>
-  <VCalendar  expanded :attributes="reslist" @dayclick="dayClick" @did-move="onDidMove"   mode="date"/>
+  <vue-cal
+    active-view="week"
+    :time-from="9 * 60"
+    :time-step="30"
+    :time-to="18 * 60"
+    :split-days="splitDays"
+    locale="ko"
+    :disable-views="['years','year','day']"
+  ></vue-cal>
 </template>
-<style scoped>
-</style>

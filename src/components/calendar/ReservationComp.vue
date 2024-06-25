@@ -56,7 +56,7 @@ defineProps({
           <v-btn
             icon="mdi-pencil"
             variant="text"
-            @click="emit('update-schedule',{ roomname:item.roomname,name:item.name})"
+            @click="emit('update-schedule',{ roomname:item.roomname,name:item.name,id:item.id})"
           ></v-btn>
         </template>
       </v-list-item>
