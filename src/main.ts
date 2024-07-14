@@ -12,6 +12,9 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { aliases, mdi} from "vuetify/iconsets/mdi"
 
+// common.js
+import common from "./utils/Plugins/common";
+
 // common.css
 import "./assets/common.css";
 
@@ -31,9 +34,9 @@ const vuetify = createVuetify({
 import VCalendar from "v-calendar";
 import "v-calendar/style.css";
 const app = createApp(App);
-
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.use(VCalendar, {});
 app.use(router);
 app.use(vuetify)
+app.use(common);
 app.mount("#app");

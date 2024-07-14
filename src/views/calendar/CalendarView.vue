@@ -3,32 +3,29 @@ import CalendarComp from "@/components/calendar/CalendarComp.vue";
 import ReservationComp from "@/components/calendar/ReservationComp.vue";
 import RegisterSchedule from "@/components/calendar/RegisterSchedule.vue";
 import type { CalendarDay,CalendarDate } from "@/interface/calendarday.interface";
-import { ref } from "vue";
-import { getCalendarList } from "@/api/calendarApi";
+import { inject, ref } from "vue";
+import { saveSchedule } from "@/api/scheduleApi";
 import type { ListItem } from "@/interface/reservation.interface";
 import type { SaveSchedule } from "@/interface/schedule.interface";
+import { getMonthSchedule } from "@/api/meetingApi";
+const dayjs = inject("dayjs");
 const curDate = ref<Date>(new Date());
-
+const dayObject = new dayjs();
+dayObject.setNow();
 /**
  * @description 캘린더 데이터 포멧
  */
-const setformatCalendar = ()=>{
-  getCalendarList().then(res=>{
-    const { list } = res.data;
-    const len = list.length;
-    for(let i = 0 ; i < len ;i++){
-      const obj:CalendarDate = {
-        key:list[i]["key"],
-        highlight:{
-          color: "purple",
-          fillMode: "light", 
-        },
-        dates:new Date(list[i]["dates"]),
-        list:list[i]["list"]
-      }
-      dateAttribute.value.push(obj)
-    }
-  })
+const setformatCalendar = async ()=>{
+  const yyyymm = dayObject.getFormat("YYYY-MM");
+  try {
+    const { data } = await getMonthSchedule(yyyymm)
+    console.log(data);
+   
+  } catch (error) {
+    console.error(error);
+    
+  }
+  
 }
 
 /**
@@ -84,9 +81,18 @@ const openDialog = ()=>{
  * 
  * @param item 저장될 스케줄
  */
-const onSaveSchedule = (item:SaveSchedule) =>{
-  console.log(item);
-  
+const onSaveSchedule = async (item:SaveSchedule) =>{
+  try {
+    const result =  await saveSchedule(item);
+    const { resultCd } = result.data;
+    if(resultCd === "0000"){
+      dialog.value = false;
+    }
+    
+  } catch (error) {
+    console.log("error : ",error);
+    
+  }
 }
 
 const dateAttribute = ref<CalendarDate[]>([]);

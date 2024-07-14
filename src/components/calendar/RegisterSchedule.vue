@@ -24,7 +24,7 @@ const emits = defineEmits(["close-dialog","save-schedule"])
 const dialog = toRef(props,"dialog");
 const timeList = ref<ValidateItem[]>([]);
 const minList = ref<ValidateItem[]>([]);
-const roomCode = ref<string>("A0001");
+const roomCode = ref<string>("");
 const startHour = ref<string>("");
 const startMin  = ref<string>("");
 const endHour = ref<string>("");
@@ -74,7 +74,14 @@ const saveSchedule = ()=>{
       }
     ]);
 
+    const yyyy = props.selectdate.getFullYear();
+    const mm = props.selectdate.getMonth()+1 > 9 ? props.selectdate.getMonth()+1 : `0${props.selectdate.getMonth()+1}`;
+    const dd = props.selectdate.getDate() > 9 ?  props.selectdate.getDate() : `0${props.selectdate.getDate()}`;
+
+
+    
     emits("save-schedule",{
+      scheduleDate:`${yyyy}-${mm}-${dd}`,
       scheduleStartTime:`${startHour.value}:${startMin.value}`,
       scheduleEndTime:`${endHour.value}:${endMin.value}`,
       meetingRoomCode:`${roomCode.value}`
@@ -105,10 +112,22 @@ const roomUpdateMenu = (val:string)=>{
   roomCode.value = val;
 }
 
+/**
+ * @description 다이얼로그 Leave 이벤트
+ */
+const onAfterLeave =  ()=>{
+  console.log("after leave");
+  roomCode.value = "";
+  startHour.value = "";
+  startMin.value = "";
+  endHour.value = ""
+  endMin.value =""
+}
+
 
 </script>
 <template>
-  <v-dialog max-width="600" :model-value="dialog" persistent>
+  <v-dialog max-width="600" :model-value="dialog" persistent @afterLeave="onAfterLeave">
     <v-card title="예약등록">
       <template v-slot:text>
         <div class="d-flex flex-column">
@@ -118,7 +137,7 @@ const roomUpdateMenu = (val:string)=>{
             variant="outlined"
             :model-value="roomCode"
             @update:modelValue="roomUpdateMenu"
-            :items="[{title:'소회의실1',value:'A0001'},{title:'소회의실2',value:'A0002'},{title:'4층',value:'A0003'}]"
+            :items="[{title:'-선택-',value:''},{title:'소회의실1',value:'A0001'},{title:'소회의실2',value:'A0002'},{title:'4층',value:'A0003'}]"
           ></v-select>
           <h6 class="text-h6">시작시간</h6>
           <div class="d-flex">
