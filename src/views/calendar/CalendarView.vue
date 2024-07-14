@@ -10,22 +10,15 @@ import type { SaveSchedule } from "@/interface/schedule.interface";
 import { getMonthSchedule } from "@/api/meetingApi";
 const dayjs = inject("dayjs");
 const curDate = ref<Date>(new Date());
-const dayObject = new dayjs();
-dayObject.setNow();
+const dayjsObject = new (dayjs as any)(new Date())
+
+
 /**
  * @description 캘린더 데이터 포멧
  */
 const setformatCalendar = async ()=>{
-  const yyyymm = dayObject.getFormat("YYYY-MM");
-  try {
-    const { data } = await getMonthSchedule(yyyymm)
-    console.log(data);
-   
-  } catch (error) {
-    console.error(error);
-    
-  }
-  
+  const yyyymm = dayjsObject.getFormat("YYYY-MM");
+  getMonthSchedule(yyyymm)
 }
 
 /**

@@ -1,7 +1,14 @@
 import dayjs from "dayjs";
 
-function DayJs(){
-  this.now = null;
+interface dayjsType{
+  now:Date|null;
+  setNow():void;
+  getNow():void;
+  getFormat():void;
+}
+
+function DayJs(this:dayjsType){
+  this.now = new Date();
 }
 
 DayJs.prototype.setNow =  function(){
@@ -11,7 +18,7 @@ DayJs.prototype.getNow = function(){
   return this.now;
 }
 
-DayJs.prototype.getFormat = function(format){
+DayJs.prototype.getFormat = function(format:string){
   return dayjs().format(format)
 }
 
