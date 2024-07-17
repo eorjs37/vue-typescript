@@ -8,6 +8,7 @@ import { saveSchedule } from "@/api/scheduleApi";
 import type { ListItem } from "@/interface/reservation.interface";
 import type { SaveSchedule } from "@/interface/schedule.interface";
 import { getMonthSchedule } from "@/api/meetingApi";
+import { uniqBy } from "lodash"
 const dayjs = inject("dayjs");
 const curDate = ref<Date>(new Date());
 const dayjsObject = new (dayjs as any)(new Date())
@@ -18,7 +19,20 @@ const dayjsObject = new (dayjs as any)(new Date())
  */
 const setformatCalendar = async ()=>{
   const yyyymm = dayjsObject.getFormat("YYYY-MM");
-  getMonthSchedule(yyyymm)
+  try {
+    const { data }=  await getMonthSchedule(yyyymm);
+    
+    if(Array.isArray(data)){
+      const monthList = uniqBy(data,"scheduleDate")
+      console.log(monthList.map(item => item.scheduleDate));
+    }
+    
+    
+  } catch (error) {
+    console.error("setformatCalendar error : ",error);
+    
+  }
+  
 }
 
 /**
@@ -88,7 +102,22 @@ const onSaveSchedule = async (item:SaveSchedule) =>{
   }
 }
 
-const dateAttribute = ref<CalendarDate[]>([]);
+const dateAttribute = ref<CalendarDate[]>([
+  {
+    key:"group1",
+    highlight:"blue",
+    dates:new Date(),
+    list:[
+      {
+        name:"회의실1",
+        id:1,
+        icon:"",
+        roomname:"소회의실1",
+        date:new Date()
+      }
+    ]
+  }
+]);
 const dayReservationList = ref<ListItem[]>([]);
 const dialog = ref<boolean>(false);
 
