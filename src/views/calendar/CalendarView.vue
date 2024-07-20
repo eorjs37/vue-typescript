@@ -9,6 +9,7 @@ import type { ListItem } from "@/interface/reservation.interface";
 import type { SaveSchedule } from "@/interface/schedule.interface";
 import { getMonthSchedule } from "@/api/meetingApi";
 import { uniqBy } from "lodash"
+import type { Page } from "v-calendar/dist/types/src/utils/page";
 const dayjs = inject("dayjs");
 const curDate = ref<Date>(new Date());
 const dayjsObject = new (dayjs as any)(new Date())
@@ -17,22 +18,51 @@ const dayjsObject = new (dayjs as any)(new Date())
 /**
  * @description 캘린더 데이터 포멧
  */
-const setformatCalendar = async ()=>{
-  const yyyymm = dayjsObject.getFormat("YYYY-MM");
+const setformatCalendar = async (yyyymm:string)=>{
+  dateAttribute.value = [];
   try {
     const { data }=  await getMonthSchedule(yyyymm);
     
     if(Array.isArray(data)){
       const monthList = uniqBy(data,"scheduleDate")
-      console.log(monthList.map(item => item.scheduleDate));
+      const dayGroup = monthList.map(item => item.scheduleDate)
+
+      const dayGroupLen = dayGroup.length;
+      
+      // 월별 조회
+      for(let dayGroupIndex = 0 ; dayGroupIndex < dayGroupLen ;dayGroupIndex++){
+        const dateAttributeObject = {
+          key:"group"+(dayGroupIndex+1),
+          highlight:"blue",
+          dates:new Date(dayGroup[dayGroupIndex]),
+          list:new Array<ListItem>()
+        }
+
+        // 해당 일자 추출
+        const findDayList = data.filter(item => item.scheduleDate === dayGroup[dayGroupIndex]);
+        if(findDayList.length > 0){
+          const findDayListLen = findDayList.length;
+          for(let findDayIndex = 0 ; findDayIndex < findDayListLen ; findDayIndex++){
+            
+            const listItem:ListItem = {
+              name: `${findDayList[findDayIndex]["scheduleStartTime"]} ~ ${findDayList[findDayIndex]["scheduleEndTime"]}`,
+              id:findDayList[findDayIndex].id,
+              icon:"",
+              roomname:findDayList[findDayIndex]["meetingRoomName"] ? findDayList[findDayIndex]["meetingRoomName"] : "미지정",
+              date:new Date(`${findDayList[findDayIndex]["scheduleDate"]} ${findDayList[findDayIndex]["scheduleStartTime"]} ${findDayList[findDayIndex]["scheduleEndTime"]}`)
+            }
+            dateAttributeObject.list.push(listItem)
+          }
+        }
+
+        dateAttribute.value.push(dateAttributeObject)
+      }
     }
     
     
   } catch (error) {
-    console.error("setformatCalendar error : ",error);
-    
+    console.error("setformatCalendar error : ",error);   
   }
-  
 }
 
 /**
@@ -102,33 +132,22 @@ const onSaveSchedule = async (item:SaveSchedule) =>{
   }
 }
 
-const dateAttribute = ref<CalendarDate[]>([
-  {
-    key:"group1",
-    highlight:"blue",
-    dates:new Date(),
-    list:[
-      {
-        name:"회의실1",
-        id:1,
-        icon:"",
-        roomname:"소회의실1",
-        date:new Date()
-      }
-    ]
-  }
-]);
+const onUpdateView = (page:Page) =>{
+  setformatCalendar(page.id)
+}
+
+const dateAttribute = ref<CalendarDate[]>([]);
 const dayReservationList = ref<ListItem[]>([]);
 const dialog = ref<boolean>(false);
-
-setformatCalendar();
+const yyyymm = dayjsObject.getFormat("YYYY-MM");
+setformatCalendar(yyyymm);
 
 const isLoading = ref<boolean>(false);
 </script>
 <template>
   <v-container>
     <RegisterSchedule @save-schedule="onSaveSchedule" :selectdate="curDate" :dialog="dialog" @close-dialog="dialog=false"/>
-    <CalendarComp :currentdate="curDate" :reslist="dateAttribute" @click-day="onDayClick"/>
+    <CalendarComp :currentdate="curDate" :reslist="dateAttribute" @click-day="onDayClick" @update-page="onUpdateView"/>
     <div class="d-flex mt-5">
       <v-btn color="indigo" @click="openDialog">
         예약등록
