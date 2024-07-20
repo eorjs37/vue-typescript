@@ -23,13 +23,13 @@ defineProps({
   }
 });
 
-const emit = defineEmits(["click-edit"]);
+const emit = defineEmits(["click-edit","click-delete"]);
 
 const editItem = (item:ListItem)=>{
   emit("click-edit",item)
 }
-const deleteItem = ()=>{
-  console.log("deleteItem");
+const deleteItem = (item:ListItem)=>{
+  emit("click-delete",item);
 }
 
 </script>
@@ -54,7 +54,7 @@ const deleteItem = ()=>{
             <span>{{ item.name }} / {{ item.roomname }}</span>
             <div class="d-flex">
               <v-icon icon="mdi-pencil" class="mr-3" @click="editItem(item)"></v-icon>
-              <v-icon icon="mdi-trash-can" @click="deleteItem"></v-icon>
+              <v-icon icon="mdi-trash-can" @click="deleteItem(item)"></v-icon>
             </div>
           </div>
         </v-list-item-title>

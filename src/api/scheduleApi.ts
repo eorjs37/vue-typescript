@@ -9,7 +9,12 @@ const updateSchedule = async (item:SaveSchedule):Promise<AxiosResponse> =>{
   return await instance.put("/api/schedule",item)
 }
 
+const deleteScheduleId = async(deleteId:number):Promise<AxiosResponse> =>{
+  return await instance.delete(`/api/schedule/${deleteId}`)
+}
+
 export{
   saveSchedule,
-  updateSchedule
+  updateSchedule,
+  deleteScheduleId
 }

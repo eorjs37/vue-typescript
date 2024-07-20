@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import CalendarComp from "@/components/calendar/CalendarComp.vue";
+import ConfirmModal from "@/components/common/ConfirmModal.vue";
 import ReservationComp from "@/components/calendar/ReservationComp.vue";
 import RegisterSchedule from "@/components/calendar/RegisterSchedule.vue";
 import type { CalendarDay,CalendarDate } from "@/interface/calendarday.interface";
 import { inject, ref } from "vue";
-import { saveSchedule, updateSchedule } from "@/api/scheduleApi";
-import type {   RegisterItem,  ListItem } from "@/interface/reservation.interface";
+import { saveSchedule, updateSchedule ,deleteScheduleId} from "@/api/scheduleApi";
+import type { RegisterItem, ListItem } from "@/interface/reservation.interface";
 import type { SaveSchedule } from "@/interface/schedule.interface";
 import { getMonthSchedule } from "@/api/meetingApi";
 import { uniqBy } from "lodash"
@@ -82,6 +83,7 @@ const onDayClick = (val:CalendarDay)=>{
  * @description 모달 오픈
  */
 const openDialog = ()=>{
+  registerItemObject.value = null;
   dialog.value = true;
 }
 
@@ -94,6 +96,7 @@ const onUpdateSchedule = async (item:SaveSchedule) =>{
         isOpenSnackBar.value = false;
       }, 2000);
     }
+    snackbarText.value = "저장 되었습니다."
     isOpenSnackBar.value = true;
   } catch (error) {
     console.log("error : ",error);
@@ -119,6 +122,7 @@ const onSaveSchedule = async (item:SaveSchedule) =>{
         isOpenSnackBar.value = false;
       }, 2000);
     }
+    snackbarText.value = "저장 되었습니다."
     isOpenSnackBar.value = true;
   } catch (error) {
     console.log("error : ",error);
@@ -147,6 +151,35 @@ const onClickEdit = (item:ListItem)=>{
   }
   registerItemObject.value = scheduleItem;
   dialog.value = true;
+}
+
+
+const onClickDelete = (item:ListItem) =>{
+  deleteId.value = item.id;
+  confirmDialog.value = true;
+}
+
+const onCancelClick = ()=>{
+  confirmDialog.value = false;
+}
+
+const onConfirmClick = async () =>{
+  try {
+    await deleteScheduleId(deleteId.value)
+    confirmDialog.value = false;
+    if(!isOpenSnackBar.value){
+      setTimeout(() => {
+        isOpenSnackBar.value = false;
+      }, 2000);
+    }
+    snackbarText.value = "삭제 되었습니다."
+    isOpenSnackBar.value = true;
+  } catch (error) {
+    console.error("error : ",error);
+  }finally{
+    await setformatCalendar(yyyymm.value)
+    setDayreservation(curDate.value)
+  }
 }
 
 const setDayreservation = (diffDate:Date)=>{
@@ -193,26 +226,32 @@ const dialog = ref<boolean>(false);
 const yyyymm =  ref<string>(dayjsObject.getFormat("YYYY-MM"));
 const registerItemObject = ref<RegisterItem | null>(null);
 const isOpenSnackBar = ref<boolean>(false);
-
+const isLoading = ref<boolean>(false);
+const confirmDialog = ref<boolean>(false);
+const confirmTitle = ref<string>("삭제");
+const confirmContents  = ref<string>("삭제 하시겠습니까?");
+const deleteId = ref<number>(-1);
+const snackbarText = ref<string>("저장 되었습니다");
 init();
 
-const isLoading = ref<boolean>(false);
 </script>
 <template>
   <v-container>
     <RegisterSchedule @save-schedule="onSaveSchedule" @update-schedule="onUpdateSchedule" :registeritem="registerItemObject" :selectdate="curDate" :dialog="dialog" @close-dialog="dialog=false"/>
     <CalendarComp :currentdate="curDate" :reslist="dateAttribute" @click-day="onDayClick" @update-page="onUpdateView"/>
+    <ConfirmModal :modaltitle="confirmTitle" :modalcontents="confirmContents" :dialog="confirmDialog" @cancel-click="onCancelClick" @confirm-click="onConfirmClick"/>
     <div class="d-flex mt-5">
       <v-btn color="indigo" @click="openDialog">
         예약등록
       </v-btn>
     </div>
-    <ReservationComp @click-edit="onClickEdit" :selectdate="curDate" :isloading="isLoading" :dayreservationlist="dayReservationList"/>
+    <ReservationComp @click-edit="onClickEdit" @click-delete="onClickDelete" :selectdate="curDate" :isloading="isLoading" :dayreservationlist="dayReservationList"/>
 
     <v-snackbar  :timeout="2000"
                  color="primary"
                  :model-value="isOpenSnackBar"
                  variant="tonal">
-      저장 되었습니다</v-snackbar>
+      {{  snackbarText }}
+    </v-snackbar>
   </v-container>
 </template>

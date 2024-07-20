@@ -44,7 +44,7 @@ const endMin  = ref<string>("");
 
 watch(dialog,(val)=>{
   if(val){
-    if(props.registeritem){
+    if(props.registeritem && Object.keys(props.registeritem).length > 0){
       const{ id:roomid,meetingRoomCode ,scheduleStartTime, scheduleEndTime } = props.registeritem;
       roomCode.value = meetingRoomCode ? meetingRoomCode : "";
       if(scheduleStartTime){
@@ -169,7 +169,6 @@ const roomUpdateMenu = (val:string)=>{
  * @description 다이얼로그 Leave 이벤트
  */
 const onAfterLeave =  ()=>{
-  console.log("after leave");
   roomCode.value = "";
   startHour.value = "";
   startMin.value = "";
