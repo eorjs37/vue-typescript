@@ -1,6 +1,7 @@
 
 <script setup lang="ts">
-import { ref, toRef} from "vue";
+import { ref, toRef, watch} from "vue";
+import type { RegisterItem } from "@/interface/reservation.interface";
 
 interface ValidateItem{
   title:string;
@@ -18,10 +19,20 @@ const props = defineProps({
     required:false,
     default:new Date()
   },
+  registeritem:{
+    type:Object as () => RegisterItem | null,
+    required:false,
+    default:()=>{
+      return {
+        id:-1
+      }
+    }
+  }
 })
-const emits = defineEmits(["close-dialog","save-schedule"])
+const emits = defineEmits(["close-dialog","save-schedule","update-schedule"])
 
 const dialog = toRef(props,"dialog");
+const id = ref<number>(-1);
 const timeList = ref<ValidateItem[]>([]);
 const minList = ref<ValidateItem[]>([]);
 const roomCode = ref<string>("");
@@ -29,6 +40,38 @@ const startHour = ref<string>("");
 const startMin  = ref<string>("");
 const endHour = ref<string>("");
 const endMin  = ref<string>("");
+
+
+watch(dialog,(val)=>{
+  if(val){
+    if(props.registeritem){
+      const{ id:roomid,meetingRoomCode ,scheduleStartTime, scheduleEndTime } = props.registeritem;
+      roomCode.value = meetingRoomCode ? meetingRoomCode : "";
+      if(scheduleStartTime){
+        const splitStartTime = scheduleStartTime.split(":");
+      
+        const stHour = splitStartTime[0];
+        const stMin = splitStartTime[1];
+        startHour.value = stHour;
+        startMin.value = stMin;
+      }
+
+      if(scheduleEndTime){
+        const splitEndTime = scheduleEndTime.split(":");
+        const edHour = splitEndTime[0];
+        const edMin  = splitEndTime[1];
+    
+        endHour.value = edHour;
+        endMin.value = edMin;
+      }
+    
+    
+    
+      id.value = roomid ? roomid : -1;
+    }
+    
+  }
+})
 
 for(let  i = 0 ; i < 24 ; i++){
   const times = i > 9 ? String(i) : `0${i}`
@@ -79,13 +122,23 @@ const saveSchedule = ()=>{
     const dd = props.selectdate.getDate() > 9 ?  props.selectdate.getDate() : `0${props.selectdate.getDate()}`;
 
 
-    
-    emits("save-schedule",{
-      scheduleDate:`${yyyy}-${mm}-${dd}`,
-      scheduleStartTime:`${startHour.value}:${startMin.value}`,
-      scheduleEndTime:`${endHour.value}:${endMin.value}`,
-      meetingRoomCode:`${roomCode.value}`
-    });  
+    if(props.registeritem && props.registeritem.datatype === 1){
+      emits("save-schedule",{
+        scheduleDate:`${yyyy}-${mm}-${dd}`,
+        scheduleStartTime:`${startHour.value}:${startMin.value}`,
+        scheduleEndTime:`${endHour.value}:${endMin.value}`,
+        meetingRoomCode:`${roomCode.value}`
+      });  
+    }else{
+      emits("update-schedule",{
+        id:id.value,
+        scheduleDate:`${yyyy}-${mm}-${dd}`,
+        scheduleStartTime:`${startHour.value}:${startMin.value}`,
+        scheduleEndTime:`${endHour.value}:${endMin.value}`,
+        meetingRoomCode:`${roomCode.value}`
+      })
+    }
+   
   } catch (error:any) {
     alert(error.message)
   }

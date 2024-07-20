@@ -5,4 +5,5 @@ export interface SaveSchedule{
     scheduleTitle?:string;
     scheduleContents?:string;
     meetingRoomCode?:string;
+    id?:number;
 }

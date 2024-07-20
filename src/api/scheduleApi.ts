@@ -5,6 +5,11 @@ const saveSchedule =  async (item:SaveSchedule):Promise<AxiosResponse> =>{
   return  await instance.post("/api/schedule",item)
 }
 
+const updateSchedule = async (item:SaveSchedule):Promise<AxiosResponse> =>{
+  return await instance.put("/api/schedule",item)
+}
+
 export{
-  saveSchedule
+  saveSchedule,
+  updateSchedule
 }
