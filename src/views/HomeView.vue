@@ -44,10 +44,7 @@ setNaverNews();
   <v-container>
     <div class="d-flex justify-end mb-6">
       <v-btn color="blue-darken-3" @click="movePage('Calendar')">
-        스케줄(진행중)
-      </v-btn>
-      <v-btn color="blue-darken-3 ml-5" @click="movePage('MusicPlayer')">
-        플레이어(진행중)
+        회의실 관리
       </v-btn>
     </div>
     <div class="d-block">
