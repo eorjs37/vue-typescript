@@ -19,7 +19,7 @@ export default defineConfig({
         short_name:"MYAPP",
         description:"MYAPP",
         theme_color:"#ff1150",
-        display:"browser",
+        display:"standalone",
         icons:[
           {
             src:"images/icon/logo.png",
