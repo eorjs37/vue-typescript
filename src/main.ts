@@ -4,6 +4,10 @@ import router from "./router";
 import "./assets/fontawesome/fontawesome";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+
+// registerServiceWorker
+import "./registerServiceWorker"
+
 // vuetify
 import "vuetify/styles";
 import "@mdi/font/css/materialdesignicons.css"
