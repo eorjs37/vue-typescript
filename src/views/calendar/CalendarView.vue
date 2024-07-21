@@ -37,7 +37,7 @@ const setformatCalendar = async (yyyymm:string)=>{
           key:"group"+(dayGroupIndex+1),
           highlight:"blue",
           dates:new Date(dayGroup[dayGroupIndex]),
-          list:new Array<ListItem>()
+          list:new Array<ListItem>(),
         }
 
         // 해당 일자 추출
