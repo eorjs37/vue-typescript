@@ -24,6 +24,11 @@ const props = defineProps({
 const emit =  defineEmits(["click-day","update-page"])
 
 const dayClick = (val:CalendarDay)=>{
+  for (let output in val){
+    const key = JSON.stringify(output);
+  }
+  
+    
   const { date } = val;
   curDate.value = date;
   emit("click-day",val)
