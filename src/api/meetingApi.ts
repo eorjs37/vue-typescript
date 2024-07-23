@@ -9,6 +9,11 @@ const getMonthSchedule = async (date:string):Promise<AxiosResponse>=>{
   })
 }
 
+const meetingRoomList = async ():Promise<AxiosResponse> =>{
+  return await instance.get("/api/meetingroom")
+}
+
 export{
-  getMonthSchedule
+  getMonthSchedule,
+  meetingRoomList
 }

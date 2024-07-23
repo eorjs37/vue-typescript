@@ -2,10 +2,15 @@
 <script setup lang="ts">
 import { ref, toRef, watch} from "vue";
 import type { RegisterItem } from "@/interface/reservation.interface";
-
+import { meetingRoomList } from "@/api/meetingApi";
 interface ValidateItem{
   title:string;
   value:string
+}
+
+interface MeetingRoom{
+  title:string;
+  value:string;
 }
 
 const props = defineProps({
@@ -40,6 +45,7 @@ const startHour = ref<string>("");
 const startMin  = ref<string>("");
 const endHour = ref<string>("");
 const endMin  = ref<string>("");
+const meetingRoomArray = ref<MeetingRoom[]>([]);
 
 
 watch(dialog,(val)=>{
@@ -176,6 +182,29 @@ const onAfterLeave =  ()=>{
   endMin.value =""
 }
 
+const getMeeingRoomAllList = async ()=>{
+  try {
+    const { data } =  await meetingRoomList();
+    meetingRoomArray.value = [];
+    const len = data.length;
+    meetingRoomArray.value.push({
+      title:"-선택-",
+      value:""
+    })
+    for(let meetingRoomIndex = 0 ; meetingRoomIndex < len ; meetingRoomIndex++){
+      meetingRoomArray.value.push({
+        title:data[meetingRoomIndex]["meetingRoomName"],
+        value:data[meetingRoomIndex]["meetingRoomCode"]
+      })
+    }
+  } catch (error) {
+    console.error("error : ",error);
+    
+  }
+}
+
+getMeeingRoomAllList();
+
 
 </script>
 <template>
@@ -189,7 +218,7 @@ const onAfterLeave =  ()=>{
             variant="outlined"
             :model-value="roomCode"
             @update:modelValue="roomUpdateMenu"
-            :items="[{title:'-선택-',value:''},{title:'소회의실1',value:'A0001'},{title:'소회의실2',value:'A0002'},{title:'4층',value:'A0003'}]"
+            :items="meetingRoomArray"
           ></v-select>
           <h6 class="text-h6">시작시간</h6>
           <div class="d-flex">
