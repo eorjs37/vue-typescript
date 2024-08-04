@@ -24,6 +24,7 @@
     "@types/jest": "^29.5.1",
     "axios": "^1.6.8",
     "dayjs": "^1.11.11",
+    "firebase": "^10.12.5",
     "hls.js": "^1.5.9",
     "register-service-worker": "^1.7.2",
     "sockjs-client": "^1.6.1",
