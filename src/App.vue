@@ -37,9 +37,6 @@ firebassMessage.getToken(messaging,{
   
   })
 
-firebassMessage.onMessage(messaging,(payload)=>{
-  console.log("paylaod : ",payload);
-})
 
 
 

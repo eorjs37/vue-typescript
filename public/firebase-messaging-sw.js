@@ -29,11 +29,11 @@ messaging.onBackgroundMessage((payload)=>{
     notification
   );
 
-  const notificationTitle = notification.title;
-  const notificationOptions = {
-    body: notification.body,
-    icon:"/images/icon/logo.png"
-  }
+  //   const notificationTitle = notification.title;
+  //   const notificationOptions = {
+  //     body: notification.body,
+  //     icon:"/images/icon/logo.png"
+  //   }
 
-  self.registration.showNotification(notificationTitle,notificationOptions)
+//   self.registration.showNotification(notificationTitle,notificationOptions)
 })
