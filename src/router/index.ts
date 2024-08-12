@@ -20,11 +20,6 @@ const router = createRouter({
       component: () => import("../views/login/LoginView.vue")
     },
     {
-      path: "/payment",
-      name: "Payment",
-      component: () => import("@/views/payment/PaymentView.vue")
-    },
-    {
       path: "/compostion",
       name: "Compostion",
       component: () => import("@/views/compostion/CompositionView.vue")
