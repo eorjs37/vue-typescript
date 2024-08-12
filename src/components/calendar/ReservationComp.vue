@@ -51,7 +51,7 @@ const deleteItem = (item:ListItem)=>{
         </template>           
         <v-list-item-title>
           <div class="d-flex justify-space-between">
-            <span>{{ item.name }} / {{ item.roomname }}</span>
+            <span>{{ item.name }}</span>
             <div class="d-flex">
               <v-icon icon="mdi-pencil" class="mr-3" @click="editItem(item)"></v-icon>
               <v-icon icon="mdi-trash-can" @click="deleteItem(item)"></v-icon>

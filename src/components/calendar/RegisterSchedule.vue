@@ -70,16 +70,13 @@ watch(dialog,(val)=>{
         endHour.value = edHour;
         endMin.value = edMin;
       }
-    
-    
-    
       id.value = roomid ? roomid : -1;
     }
     
   }
 })
 
-for(let  i = 0 ; i < 24 ; i++){
+for(let  i = 9 ; i < 23 ; i++){
   const times = i > 9 ? String(i) : `0${i}`
   const time ={
     title:times,
@@ -90,15 +87,7 @@ for(let  i = 0 ; i < 24 ; i++){
 
 timeList.value = [{title:"선택",value:""},...timeList.value]
 
-for(let  i = 0 ; i < 60 ; i+=10){
-  const mins = i > 9 ? String(i) : `0${i}`
-  const min ={
-    title:mins,
-    value:mins
-  }
-  minList.value.push(min);
-}
-minList.value = [{title:"선택",value:""},...minList.value]
+minList.value = [{title:"선택",value:""},{title:"00",value:"00"},{title:"30",value:"30"}]
 /**
  * @description 스케줄 등록
  */
@@ -212,14 +201,6 @@ getMeeingRoomAllList();
     <v-card title="예약등록">
       <template v-slot:text>
         <div class="d-flex flex-column">
-          <v-select
-            clearable
-            label="회의실선택"
-            variant="outlined"
-            :model-value="roomCode"
-            @update:modelValue="roomUpdateMenu"
-            :items="meetingRoomArray"
-          ></v-select>
           <h6 class="text-h6">시작시간</h6>
           <div class="d-flex">
             <v-select
