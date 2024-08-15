@@ -35,3 +35,11 @@ export interface CalendarDate{
   dates?:Date;
   list?:ListItem[]
 }
+
+export interface Event{
+  start:string;
+  end:string;
+  title:string;
+  content?:string;
+  class?:string;
+}

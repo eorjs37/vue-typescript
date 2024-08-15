@@ -7,6 +7,8 @@
   ],
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
+    "noImplicitAny": false,
+    "allowJs": true,
     "baseUrl": ".",
     "paths": {
       "@/*": [
