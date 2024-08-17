@@ -5,14 +5,20 @@
         예약등록
       </v-btn>
     </div>
-    <VueCalComp :eventsdata="eventsData" @change-view="onChangeView"/>
+    <VueCalComp :eventsdata="eventsData" @change-view="onChangeView" @cell-click="onCellClick"/>
+    <ManageSchedule :dialog="dialog" :selectdate="currentDate" @close-schedulemodal="onCloseScheduleModal"/>
   </v-container>
 </template>
 <script lang="ts" setup>
 interface Param{
   yyyymm:string
 }
+
+interface CellClickParam{
+  date:Date;
+}
 import VueCalComp from "@/components/calendar/VueCalComp.vue"
+import ManageSchedule from "@/components/calendar/ManageSchedule.vue";
 import type { Event } from "@/interface/calendarday.interface";
 import { inject,ref } from "vue";
 import { getMonthSchedule } from "@/api/meetingApi";
@@ -20,9 +26,7 @@ const dayjs = inject("dayjs");
 const dayjsObject = new (dayjs as any)(new Date())
 
 
-
 const eventsData = ref<Event[]>([]);
-
 const setformatCalendar = async (yyyymm:string)=>{
   try {
     const { data }=  await getMonthSchedule(yyyymm);
@@ -54,8 +58,20 @@ const setformatCalendar = async (yyyymm:string)=>{
 const onChangeView = (val:Param) =>{
   setformatCalendar(val.yyyymm)
 }
-const openDialog = () =>{
 
+const onCloseScheduleModal = ()=>{
+  dialog.value = false;
+}
+
+const dialog = ref<boolean>(false);
+const openDialog = () =>{
+  dialog.value = true;
+}
+
+const currentDate = ref<Date>(new Date());
+
+const onCellClick = (cellParam:CellClickParam) =>{
+  currentDate.value = cellParam.date;
 }
 
 

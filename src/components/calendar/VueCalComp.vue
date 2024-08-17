@@ -8,7 +8,7 @@ defineProps({
   eventsdata: Object as PropType<Event[]>
 })
 
-const emits = defineEmits(["change-view"])
+const emits = defineEmits(["change-view","cell-click"])
 
 const viewChange = ($event:EventReadyChanged)=>{
   const { startDate } = $event;
@@ -23,6 +23,12 @@ const viewChange = ($event:EventReadyChanged)=>{
 }
 
 
+const cellClick = ($event:Date) =>{
+  emits("cell-click",{
+    date:$event
+  })
+}
+
 </script>
 <template>
   <vue-cal
@@ -36,6 +42,7 @@ const viewChange = ($event:EventReadyChanged)=>{
     :disable-views="['years','year','day']"
     :events="eventsdata"
     @view-change="viewChange"
+    @cell-click="cellClick"
   />
 </template>
 <style>
@@ -48,6 +55,7 @@ const viewChange = ($event:EventReadyChanged)=>{
   border: 1px solid rgb(233, 136, 46);
   color: #fff;
   font-weight: 700;
+  cursor: pointer;
 }
 
 .meetingroom_icon{
