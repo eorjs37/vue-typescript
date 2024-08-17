@@ -1,41 +1,27 @@
 <script lang="ts" setup>
 import type { Event } from "@/interface/calendarday.interface";
-import { ref } from "vue";
 import type { PropType } from "vue";
 import VueCal from "vue-cal"
+import type { EventReadyChanged } from "vue-cal.d";
 import "vue-cal/dist/vuecal.css"
-
-
 defineProps({
   eventsdata: Object as PropType<Event[]>
 })
 
-const events = ref<Event[] | null>([]);
+const emits = defineEmits(["change-view"])
 
-events.value = [
-  {
-    start:"2024-08-15 10:00",
-    end:"2024-08-15 10:30",
-    title:"회의실1",
-    content:`
-    <span class="meetingroom_icon">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M96 64h448v352h64V40c0-22.1-17.9-40-40-40H72C49.9 0 32 17.9 32 40v376h64V64zm528 384H480v-64H288v64H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h608c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16z"/></svg>
-    </span>
-    `,
-    class:"meeting"
-  },
-  {
-    start:"2024-08-15 10:30",
-    end:"2024-08-15 11:30",
-    title:"회의실2",
-    content:`
-    <span class="meetingroom_icon">
-      <svg class="meetingroom_icon_bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M96 64h448v352h64V40c0-22.1-17.9-40-40-40H72C49.9 0 32 17.9 32 40v376h64V64zm528 384H480v-64H288v64H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h608c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16z"/></svg>
-    </span>
-    `,
-    class:"meeting"
-  }
-]
+const viewChange = ($event:EventReadyChanged)=>{
+  const { startDate } = $event;
+  const year = startDate.getFullYear();
+  const month = startDate.getMonth()+1 > 9 ? startDate.getMonth()+1 : `0${startDate.getMonth()+1}`;
+
+  
+  emits("change-view",{
+    yyyymm:`${year}-${month}`
+  })
+  
+}
+
 
 </script>
 <template>
@@ -49,6 +35,7 @@ events.value = [
     class="vuecal--green-theme"
     :disable-views="['years','year','day']"
     :events="eventsdata"
+    @view-change="viewChange"
   />
 </template>
 <style>

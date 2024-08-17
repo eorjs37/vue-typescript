@@ -5,10 +5,13 @@
         예약등록
       </v-btn>
     </div>
-    <VueCalComp :eventsdata="eventsData"/>
+    <VueCalComp :eventsdata="eventsData" @change-view="onChangeView"/>
   </v-container>
 </template>
 <script lang="ts" setup>
+interface Param{
+  yyyymm:string
+}
 import VueCalComp from "@/components/calendar/VueCalComp.vue"
 import type { Event } from "@/interface/calendarday.interface";
 import { inject,ref } from "vue";
@@ -48,10 +51,13 @@ const setformatCalendar = async (yyyymm:string)=>{
     
   }
 }
-
+const onChangeView = (val:Param) =>{
+  setformatCalendar(val.yyyymm)
+}
 const openDialog = () =>{
 
 }
+
 
 const init = () => {
   setformatCalendar(yyyymm.value)
