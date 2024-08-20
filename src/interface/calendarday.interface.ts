@@ -42,4 +42,5 @@ export interface Event{
   title:string;
   content?:string;
   class?:string;
+  id?:number;
 }

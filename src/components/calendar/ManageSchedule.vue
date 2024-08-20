@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref,inject, computed,watch, toRef } from "vue";
+import type { Event } from "@/interface/calendarday.interface";
+import type { Event as Events } from "vue-cal.d";
 const dayjs = inject("dayjs");
 let dayjsObject = new (dayjs as any)(props.selectdate)
-
-
-
+type EventClick = Event & Events;
 interface ValidateItem{
   title:string;
   value:string
@@ -21,8 +21,10 @@ const props = defineProps({
     required:false,
     default:new Date()
   },
+  propsevent: Object as PropType<EventClick>
 })
 const dialog = toRef(props,"dialog");
+
 
 const yyyyMmDd:string = computed(()=>{
   return dayjsObject.getFormat("YYYY-MM-DD")
@@ -99,7 +101,6 @@ const saveSchedule = ()=>{
 
 watch(dialog,(val)=>{
   if(val){
-    
     dayjsObject = new (dayjs as any)(props.selectdate)
   }
 })

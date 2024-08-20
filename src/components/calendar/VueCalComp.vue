@@ -2,24 +2,24 @@
 import type { Event } from "@/interface/calendarday.interface";
 import type { PropType } from "vue";
 import VueCal from "vue-cal"
-import type { EventReadyChanged } from "vue-cal.d";
+import type { EventReadyChanged, Event as Events } from "vue-cal.d";
 import "vue-cal/dist/vuecal.css"
 defineProps({
   eventsdata: Object as PropType<Event[]>
 })
 
-const emits = defineEmits(["change-view","cell-click"])
+type EventClick = Event & Events;
+
+const emits = defineEmits(["change-view","cell-click","evnet-click"])
 
 const viewChange = ($event:EventReadyChanged)=>{
   const { startDate } = $event;
   const year = startDate.getFullYear();
   const month = startDate.getMonth()+1 > 9 ? startDate.getMonth()+1 : `0${startDate.getMonth()+1}`;
 
-  
   emits("change-view",{
     yyyymm:`${year}-${month}`
   })
-  
 }
 
 
@@ -27,6 +27,10 @@ const cellClick = ($event:Date) =>{
   emits("cell-click",{
     date:$event
   })
+}
+
+const onEventClick = (event:EventClick) =>{
+  emits("evnet-click",event)
 }
 
 </script>
@@ -41,6 +45,7 @@ const cellClick = ($event:Date) =>{
     class="vuecal--green-theme"
     :disable-views="['years','year','day']"
     :events="eventsdata"
+    :on-event-click="onEventClick"
     @view-change="viewChange"
     @cell-click="cellClick"
   />
