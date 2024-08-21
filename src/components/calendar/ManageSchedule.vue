@@ -27,7 +27,7 @@ const dialog = toRef(props,"dialog");
 
 
 const yyyyMmDd:string = computed(()=>{
-  return dayjsObject.getFormat("YYYY-MM-DD")
+  return dayjsObject.getFormat("YYYY-MM-DD",props.selectdate.toDateString())
 })
 
 
