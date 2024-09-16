@@ -1,12 +1,19 @@
 <template>
   <v-container>
+    <ConfirmModal :modaltitle="'삭제'" :modalcontents="'삭제 하시겠습니까?'" :dialog="confirmModal" @cancel-click="onCancelClick" @confirm-click="onConfirmClick"/>
     <div class="d-flex mb-5">
       <v-btn color="indigo" @click="openDialog">
         예약등록
       </v-btn>
     </div>
     <VueCalComp :eventsdata="eventsData" @evnet-click="onEventClick"  @change-view="onChangeView" @cell-click="onCellClick"/>
-    <ManageSchedule :propsevent="selectEvent" :id="scheduleId" :dialog="dialog" :selectdate="currentDate" @close-schedulemodal="onCloseScheduleModal" @save-schedule="onSaveSchedule"/>
+    <ManageSchedule :propsevent="selectEvent" :id="scheduleId" :dialog="dialog" :selectdate="currentDate" @close-schedulemodal="onCloseScheduleModal" @save-schedule="onSaveSchedule" @delete-schedule="onDeleteSchedule"/>
+    <v-snackbar  :timeout="2000"
+                 color="primary"
+                 :model-value="isOpenSnackBar"
+                 variant="tonal">
+      {{  snackbarText }}
+    </v-snackbar>
   </v-container>
 </template>
 <script lang="ts" setup>
@@ -20,12 +27,13 @@ interface CellClickParam{
 
 import VueCalComp from "@/components/calendar/VueCalComp.vue"
 import ManageSchedule from "@/components/calendar/ManageSchedule.vue";
+import ConfirmModal from "@/components/common/ConfirmModal.vue";
 import type { Event } from "@/interface/calendarday.interface";
 import type { Event as Events } from "vue-cal.d";
 import { inject,ref } from "vue";
 import { getMonthSchedule } from "@/api/meetingApi";
 import type { SaveSchedule } from "@/interface/schedule.interface";
-import { saveSchedule, updateSchedule } from "@/api/scheduleApi";
+import { deleteScheduleId, saveSchedule, updateSchedule } from "@/api/scheduleApi";
 type EventClick = Event & Events;
 const dayjs = inject("dayjs");
 const dayjsObject = new (dayjs as any)(new Date())
@@ -34,6 +42,8 @@ const dayjsObject = new (dayjs as any)(new Date())
 const eventsData = ref<Event[]>([]);
 const scheduleId = ref<number>(-1);
 const selectEvent = ref<EventClick | null>(null);
+const isOpenSnackBar = ref<boolean>(false);
+const snackbarText = ref<string>("저장 되었습니다");
 const setformatCalendar = async (yyyymm:string)=>{
   try {
     const { data }=  await getMonthSchedule(yyyymm);
@@ -74,11 +84,42 @@ const onCloseScheduleModal = ()=>{
   scheduleId.value = -1
 }
 
+const onDeleteSchedule = (val)=>{
+  confirmModal.value = true;
+}
+
+const onCancelClick = ()=>{
+  confirmModal.value = false
+}
+
+const onConfirmClick = async ()=>{
+  try {
+    const { status} =  await deleteScheduleId(scheduleId.value)
+    if(status === 200){
+      //
+      confirmModal.value = false
+      dialog.value = false;
+      setformatCalendar(yyyymm.value)
+      snackbarText.value = "삭제되었습니다"
+      isOpenSnackBar.value = true
+    }else{
+      throw Error("Error")
+    }
+  } catch (error) {
+    //
+    if(error.response){
+      alert("Error")
+    }
+  }
+}
+
 const onSaveSchedule = async (item:SaveSchedule)=>{
   if(item.id === -1){
     try {
       const { status } = await saveSchedule(item);
       if(status === 200){
+        snackbarText.value = "저장 되었습니다"
+        isOpenSnackBar.value = true;
         dialog.value  =false;
       }
    
@@ -93,6 +134,8 @@ const onSaveSchedule = async (item:SaveSchedule)=>{
     try {
       const { status } = await updateSchedule(item);
       if(status === 200){
+        snackbarText.value = "저장 되었습니다"
+        isOpenSnackBar.value = true;
         dialog.value = false
       }else{
         throw Error("Error")
@@ -130,6 +173,9 @@ const init = () => {
 }
 
 const yyyymm =  ref<string>(dayjsObject.getFormat("YYYY-MM"));
+
+
+const confirmModal = ref<boolean>(false);
 
 init();
 </script>

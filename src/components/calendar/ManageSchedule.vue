@@ -38,7 +38,7 @@ const yyyyMmDd:string = computed(()=>{
 })
 
 
-const emit = defineEmits(["close-schedulemodal","save-schedule"])
+const emit = defineEmits(["close-schedulemodal","save-schedule","delete-schedule"])
 
 
 const timeList = ref<ValidateItem[]>([]);
@@ -113,6 +113,12 @@ const saveSchedule = ()=>{
   }
 }
 
+const deleteSchedule = ()=>{
+  emit("delete-schedule",{
+    id:props.id
+  })
+}
+
 watch(dialog,(val)=>{
   if(val){
     dayjsObject = new (dayjs as any)(props.selectdate)
@@ -181,10 +187,15 @@ watch(dialog,(val)=>{
       </template>
       <template v-slot:actions>
         <v-spacer></v-spacer>
-        <v-btn @click="$emit('close-schedulemodal')">
+        <v-btn variant="flat"
+               color="grey-lighten-3" @click="$emit('close-schedulemodal')">
           닫기
         </v-btn>
-        <v-btn @click="saveSchedule">
+        <v-btn variant="flat" color="error" v-if="id !== -1" @click="deleteSchedule">
+          삭제
+        </v-btn>
+        <v-btn @click="saveSchedule" variant="flat"
+               color="success">
           등록
         </v-btn>
       </template>
