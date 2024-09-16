@@ -8,6 +8,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "build-only": "vite build",
     "dev": "vite",
+    "local":"vite --mode other",
     "format": "prettier --write src/",
     "prepare": "husky install",
     "preview": "vite preview",

@@ -6,7 +6,7 @@
       </v-btn>
     </div>
     <VueCalComp :eventsdata="eventsData" @evnet-click="onEventClick"  @change-view="onChangeView" @cell-click="onCellClick"/>
-    <ManageSchedule :propsevent="selectEvent" :dialog="dialog" :selectdate="currentDate" @close-schedulemodal="onCloseScheduleModal"/>
+    <ManageSchedule :propsevent="selectEvent" :id="scheduleId" :dialog="dialog" :selectdate="currentDate" @close-schedulemodal="onCloseScheduleModal" @save-schedule="onSaveSchedule"/>
   </v-container>
 </template>
 <script lang="ts" setup>
@@ -24,12 +24,15 @@ import type { Event } from "@/interface/calendarday.interface";
 import type { Event as Events } from "vue-cal.d";
 import { inject,ref } from "vue";
 import { getMonthSchedule } from "@/api/meetingApi";
+import type { SaveSchedule } from "@/interface/schedule.interface";
+import { saveSchedule, updateSchedule } from "@/api/scheduleApi";
 type EventClick = Event & Events;
 const dayjs = inject("dayjs");
 const dayjsObject = new (dayjs as any)(new Date())
 
 
 const eventsData = ref<Event[]>([]);
+const scheduleId = ref<number>(-1);
 const selectEvent = ref<EventClick | null>(null);
 const setformatCalendar = async (yyyymm:string)=>{
   try {
@@ -61,11 +64,47 @@ const setformatCalendar = async (yyyymm:string)=>{
   }
 }
 const onChangeView = (val:Param) =>{
+  yyyymm.value = val.yyyymm
   setformatCalendar(val.yyyymm)
 }
 
 const onCloseScheduleModal = ()=>{
   dialog.value = false;
+  selectEvent.value = null
+  scheduleId.value = -1
+}
+
+const onSaveSchedule = async (item:SaveSchedule)=>{
+  if(item.id === -1){
+    try {
+      const { status } = await saveSchedule(item);
+      if(status === 200){
+        dialog.value  =false;
+      }
+   
+    } catch (error) {
+      if(error.response){
+        alert("Error")
+      }
+    }finally{
+      setformatCalendar(yyyymm.value)
+    }
+  }else{
+    try {
+      const { status } = await updateSchedule(item);
+      if(status === 200){
+        dialog.value = false
+      }else{
+        throw Error("Error")
+      }
+    }catch(error){
+      if(error.response){
+        alert("Error")
+      }
+    }finally{
+      setformatCalendar(yyyymm.value)
+    } 
+  } 
 }
 
 const dialog = ref<boolean>(false);
@@ -81,7 +120,9 @@ const onCellClick = (cellParam:CellClickParam) =>{
 
 const onEventClick = (event:EventClick) =>{
   dialog.value = true;
+  
   selectEvent.value = event;
+  scheduleId.value = event.id
 }
 
 const init = () => {
