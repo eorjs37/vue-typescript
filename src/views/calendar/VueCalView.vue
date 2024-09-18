@@ -6,9 +6,9 @@
         예약등록
       </v-btn>
     </div>
-    <VueCalComp :eventsdata="eventsData" @evnet-click="onEventClick"  @change-view="onChangeView" @cell-click="onCellClick"/>
+    <VueCalComp :eventsdata="eventsData" @evnet-click="onEventClick" @ready-view="onReadyView" @change-view="onChangeView" @cell-click="onCellClick"/>
     <ManageSchedule :propsevent="selectEvent" :id="scheduleId" :dialog="dialog" :selectdate="currentDate" @close-schedulemodal="onCloseScheduleModal" @save-schedule="onSaveSchedule" @delete-schedule="onDeleteSchedule"/>
-    <v-snackbar  :timeout="2000"
+    <v-snackbar  :timeout="1000"
                  color="primary"
                  :model-value="isOpenSnackBar"
                  variant="tonal">
@@ -18,7 +18,15 @@
 </template>
 <script lang="ts" setup>
 interface Param{
-  yyyymm:string
+  yyyymm:string,
+  startDate:Date,
+  endDate:Date,
+  view:string
+}
+
+interface ReadyView{
+  startDate:Date,
+  endDate:Date
 }
 
 interface CellClickParam{
@@ -31,9 +39,10 @@ import ConfirmModal from "@/components/common/ConfirmModal.vue";
 import type { Event } from "@/interface/calendarday.interface";
 import type { Event as Events } from "vue-cal.d";
 import { inject,ref } from "vue";
-import { getMonthSchedule } from "@/api/meetingApi";
+import { getWeekSchedule } from "@/api/meetingApi";
 import type { SaveSchedule } from "@/interface/schedule.interface";
 import { deleteScheduleId, saveSchedule, updateSchedule } from "@/api/scheduleApi";
+import * as dayjsformat from "dayjs"
 type EventClick = Event & Events;
 const dayjs = inject("dayjs");
 const dayjsObject = new (dayjs as any)(new Date())
@@ -44,38 +53,53 @@ const scheduleId = ref<number>(-1);
 const selectEvent = ref<EventClick | null>(null);
 const isOpenSnackBar = ref<boolean>(false);
 const snackbarText = ref<string>("저장 되었습니다");
-const setformatCalendar = async (yyyymm:string)=>{
+
+const clearOpenSnackBar = ()=>{
+  setTimeout(() => {
+    if(isOpenSnackBar.value){
+      isOpenSnackBar.value = false; 
+    }
+  }, 1000);  
+}
+
+
+const setFormatCal = async (startDate:string,endDate:string)=>{
   try {
-    const { data }=  await getMonthSchedule(yyyymm);
-    
-    if(Array.isArray(data)){
-      eventsData.value = []
-      const len = data.length;
-      for(let dataIndex = 0 ; dataIndex < len ; dataIndex++){
-        const eventItem:Event ={
-          start:`${data[dataIndex]["scheduleDate"]}  ${data[dataIndex]["scheduleStartTime"]}`,
-          end:`${data[dataIndex]["scheduleDate"]}  ${data[dataIndex]["scheduleEndTime"]}`,
-          title:"회의실",
-          content:`
+    const { status,data } = await getWeekSchedule(startDate,endDate)
+    if(status === 200){  
+      if(Array.isArray(data)){
+        eventsData.value = []
+        const len = data.length;
+        for(let dataIndex = 0 ; dataIndex < len ; dataIndex++){
+          const eventItem:Event ={
+            start:`${data[dataIndex]["scheduleDate"]}  ${data[dataIndex]["scheduleStartTime"]}`,
+            end:`${data[dataIndex]["scheduleDate"]}  ${data[dataIndex]["scheduleEndTime"]}`,
+            title:"회의실",
+            content:`
             <span class="meetingroom_icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M96 64h448v352h64V40c0-22.1-17.9-40-40-40H72C49.9 0 32 17.9 32 40v376h64V64zm528 384H480v-64H288v64H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h608c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16z"/></svg>
             </span>
           `,
-          class:"meeting",
-          id:data[dataIndex]["id"]
+            class:"meeting",
+            id:data[dataIndex]["id"]
+          }
+          eventsData.value.push(eventItem);
         }
-        eventsData.value.push(eventItem);
       }
+    }else{
+      throw Error("Error")
     }
-    
   } catch (error) {
-    console.error("setformatCalendar error  : ",error);
-    
+    if(error.response){
+      alert("Error")
+    }
   }
 }
+
 const onChangeView = (val:Param) =>{
-  yyyymm.value = val.yyyymm
-  setformatCalendar(val.yyyymm)
+  startDate.value = dayjsformat(val.startDate).format("YYYY-MM-DD")
+  endDate.value = dayjsformat(val.endDate).format("YYYY-MM-DD");
+  setFormatCal(startDate.value,endDate.value)
 }
 
 const onCloseScheduleModal = ()=>{
@@ -84,7 +108,7 @@ const onCloseScheduleModal = ()=>{
   scheduleId.value = -1
 }
 
-const onDeleteSchedule = (val)=>{
+const onDeleteSchedule = ()=>{
   confirmModal.value = true;
 }
 
@@ -99,7 +123,8 @@ const onConfirmClick = async ()=>{
       //
       confirmModal.value = false
       dialog.value = false;
-      setformatCalendar(yyyymm.value)
+      clearOpenSnackBar();
+      setFormatCal(startDate.value,endDate.value)
       snackbarText.value = "삭제되었습니다"
       isOpenSnackBar.value = true
     }else{
@@ -119,6 +144,7 @@ const onSaveSchedule = async (item:SaveSchedule)=>{
       const { status } = await saveSchedule(item);
       if(status === 200){
         snackbarText.value = "저장 되었습니다"
+        clearOpenSnackBar();
         isOpenSnackBar.value = true;
         dialog.value  =false;
       }
@@ -128,13 +154,14 @@ const onSaveSchedule = async (item:SaveSchedule)=>{
         alert("Error")
       }
     }finally{
-      setformatCalendar(yyyymm.value)
+      setFormatCal(startDate.value,endDate.value)
     }
   }else{
     try {
       const { status } = await updateSchedule(item);
       if(status === 200){
         snackbarText.value = "저장 되었습니다"
+        clearOpenSnackBar();
         isOpenSnackBar.value = true;
         dialog.value = false
       }else{
@@ -145,7 +172,7 @@ const onSaveSchedule = async (item:SaveSchedule)=>{
         alert("Error")
       }
     }finally{
-      setformatCalendar(yyyymm.value)
+      setFormatCal(startDate.value,endDate.value)
     } 
   } 
 }
@@ -168,14 +195,16 @@ const onEventClick = (event:EventClick) =>{
   scheduleId.value = event.id
 }
 
-const init = () => {
-  setformatCalendar(yyyymm.value)
+const onReadyView = (val:ReadyView)=>{
+  startDate.value = dayjsformat(val.startDate).format("YYYY-MM-DD")
+  endDate.value = dayjsformat(val.endDate).format("YYYY-MM-DD");
+  setFormatCal(startDate.value,endDate.value)
 }
 
+
 const yyyymm =  ref<string>(dayjsObject.getFormat("YYYY-MM"));
-
-
+const startDate = ref<string>("");
+const endDate = ref<string>("");
 const confirmModal = ref<boolean>(false);
 
-init();
 </script>

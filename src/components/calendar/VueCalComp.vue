@@ -10,14 +10,18 @@ defineProps({
 
 type EventClick = Event & Events;
 
-const emits = defineEmits(["change-view","cell-click","evnet-click"])
+const emits = defineEmits(["change-view","cell-click","evnet-click","ready-view"])
 
 const viewChange = ($event:EventReadyChanged)=>{
-  const { startDate } = $event;
+  const { startDate,endDate,view } = $event;
+  
   const year = startDate.getFullYear();
   const month = startDate.getMonth()+1 > 9 ? startDate.getMonth()+1 : `0${startDate.getMonth()+1}`;
 
   emits("change-view",{
+    startDate,
+    endDate,
+    view,
     yyyymm:`${year}-${month}`
   })
 }
@@ -33,6 +37,14 @@ const onEventClick = (event:EventClick) =>{
   emits("evnet-click",event)
 }
 
+const onReady = (event:EventReadyChanged)=>{
+  const {startDate,endDate } = event;
+  emits("ready-view",{
+    startDate,
+    endDate
+  })
+}
+
 </script>
 <template>
   <vue-cal
@@ -46,6 +58,7 @@ const onEventClick = (event:EventClick) =>{
     :disable-views="['years','year','day']"
     :events="eventsdata"
     :on-event-click="onEventClick"
+    @ready="onReady"
     @view-change="viewChange"
     @cell-click="cellClick"
   />

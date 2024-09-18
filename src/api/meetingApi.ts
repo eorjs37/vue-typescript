@@ -13,7 +13,17 @@ const meetingRoomList = async ():Promise<AxiosResponse> =>{
   return await instance.get("/api/meetingroom")
 }
 
+const getWeekSchedule = async (startDate:string,endDate:string):Promise<AxiosResponse>=>{
+  return await instance.get("/api/meetingweek",{
+    params:{
+      startDate,
+      endDate
+    }
+  })
+}
+
 export{
   getMonthSchedule,
-  meetingRoomList
+  meetingRoomList,
+  getWeekSchedule
 }

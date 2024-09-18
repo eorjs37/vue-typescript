@@ -196,7 +196,7 @@ watch(dialog,(val)=>{
         </v-btn>
         <v-btn @click="saveSchedule" variant="flat"
                color="success">
-          등록
+          {{ props.id === -1 ? '등록' : '저장' }}
         </v-btn>
       </template>
     </v-card>
