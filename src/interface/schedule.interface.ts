@@ -7,3 +7,10 @@ export interface SaveSchedule{
     meetingRoomCode?:string;
     id?:number;
 }
+
+export interface ScheduleDate{
+    startHour:string,
+    startMin:string,
+    endHour:string,
+    endMin:string
+}

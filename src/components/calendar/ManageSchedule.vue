@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref,inject, computed,watch, toRef } from "vue";
+import type { PropType } from "vue"
 import { formatCalendarDate } from "@/utils/utils";
 import type { Event } from "@/interface/calendarday.interface";
 import type { Event as Events } from "vue-cal.d";
-import type { SaveSchedule } from "@/interface/schedule.interface";
+import type { SaveSchedule,ScheduleDate } from "@/interface/schedule.interface";
 const dayjs = inject("dayjs");
-let dayjsObject = new (dayjs as any)(props.selectdate)
 type EventClick = Event & Events;
 interface ValidateItem{
   title:string;
@@ -28,12 +28,14 @@ const props = defineProps({
     required:false,
     default:new Date()
   },
-  propsevent: Object as PropType<EventClick>
+  propsevent: Object as PropType<EventClick | null>
 })
+
+let dayjsObject = new (dayjs as any)(props.selectdate)
 const dialog = toRef(props,"dialog");
 
 
-const yyyyMmDd:string = computed(()=>{
+const yyyyMmDd:unknown = computed(()=>{
   return dayjsObject.getFormat("YYYY-MM-DD",props.selectdate.toDateString())
 })
 
@@ -124,12 +126,15 @@ watch(dialog,(val)=>{
     dayjsObject = new (dayjs as any)(props.selectdate)
     if(props.propsevent){
       const { startTimeMinutes,endTimeMinutes} = props.propsevent
-      const result =  formatCalendarDate(startTimeMinutes,endTimeMinutes)
+      if(startTimeMinutes && endTimeMinutes){
+        const result:ScheduleDate =  formatCalendarDate(startTimeMinutes,endTimeMinutes)
       
-      startHour.value = result.startHour
-      startMin.value = result.startMin
-      endHour.value = result.endHour
-      endMin.value = result.endMin
+        startHour.value = result.startHour
+        startMin.value = result.startMin
+        endHour.value = result.endHour
+        endMin.value = result.endMin
+      }
+      
     }else{
       startHour.value = "";
       startMin.value = "";

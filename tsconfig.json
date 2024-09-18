@@ -6,6 +6,8 @@
     "src/**/*.vue"
   ],
   "compilerOptions": {
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "ignoreDeprecations": "5.0",
     "noImplicitAny": false,
     "allowJs": true,

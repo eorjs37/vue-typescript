@@ -17,6 +17,18 @@
   </v-container>
 </template>
 <script lang="ts" setup>
+import VueCalComp from "@/components/calendar/VueCalComp.vue"
+import ManageSchedule from "@/components/calendar/ManageSchedule.vue";
+import ConfirmModal from "@/components/common/ConfirmModal.vue";
+import type { Event } from "@/interface/calendarday.interface";
+import type { Event as Events } from "vue-cal.d";
+import { ref } from "vue";
+import { getWeekSchedule } from "@/api/meetingApi";
+import type { SaveSchedule } from "@/interface/schedule.interface";
+import { deleteScheduleId, saveSchedule, updateSchedule } from "@/api/scheduleApi";
+import dayjs from "dayjs";
+type EventClick = Event & Events;
+
 interface Param{
   yyyymm:string,
   startDate:Date,
@@ -32,21 +44,6 @@ interface ReadyView{
 interface CellClickParam{
   date:Date;
 }
-
-import VueCalComp from "@/components/calendar/VueCalComp.vue"
-import ManageSchedule from "@/components/calendar/ManageSchedule.vue";
-import ConfirmModal from "@/components/common/ConfirmModal.vue";
-import type { Event } from "@/interface/calendarday.interface";
-import type { Event as Events } from "vue-cal.d";
-import { inject,ref } from "vue";
-import { getWeekSchedule } from "@/api/meetingApi";
-import type { SaveSchedule } from "@/interface/schedule.interface";
-import { deleteScheduleId, saveSchedule, updateSchedule } from "@/api/scheduleApi";
-import * as dayjsformat from "dayjs"
-type EventClick = Event & Events;
-const dayjs = inject("dayjs");
-const dayjsObject = new (dayjs as any)(new Date())
-
 
 const eventsData = ref<Event[]>([]);
 const scheduleId = ref<number>(-1);
@@ -89,16 +86,16 @@ const setFormatCal = async (startDate:string,endDate:string)=>{
     }else{
       throw Error("Error")
     }
-  } catch (error) {
-    if(error.response){
+  } catch (error:unknown) {
+    if(error){
       alert("Error")
     }
   }
 }
 
 const onChangeView = (val:Param) =>{
-  startDate.value = dayjsformat(val.startDate).format("YYYY-MM-DD")
-  endDate.value = dayjsformat(val.endDate).format("YYYY-MM-DD");
+  startDate.value = dayjs(val.startDate).format("YYYY-MM-DD")
+  endDate.value = dayjs(val.endDate).format("YYYY-MM-DD");
   setFormatCal(startDate.value,endDate.value)
 }
 
@@ -132,49 +129,52 @@ const onConfirmClick = async ()=>{
     }
   } catch (error) {
     //
-    if(error.response){
+    if(error){
       alert("Error")
     }
   }
 }
 
-const onSaveSchedule = async (item:SaveSchedule)=>{
-  if(item.id === -1){
-    try {
-      const { status } = await saveSchedule(item);
-      if(status === 200){
-        snackbarText.value = "저장 되었습니다"
-        clearOpenSnackBar();
-        isOpenSnackBar.value = true;
-        dialog.value  =false;
-      }
+const onSaveSchedule = async (item:SaveSchedule | undefined)=>{
+  if(item){
+    if(item.id === -1){
+      try {
+        const { status } = await saveSchedule(item);
+        if(status === 200){
+          snackbarText.value = "저장 되었습니다"
+          clearOpenSnackBar();
+          isOpenSnackBar.value = true;
+          dialog.value  =false;
+        }
    
-    } catch (error) {
-      if(error.response){
-        alert("Error")
+      } catch (error) {
+        if(error){
+          alert("Error")
+        }
+      }finally{
+        setFormatCal(startDate.value,endDate.value)
       }
-    }finally{
-      setFormatCal(startDate.value,endDate.value)
-    }
-  }else{
-    try {
-      const { status } = await updateSchedule(item);
-      if(status === 200){
-        snackbarText.value = "저장 되었습니다"
-        clearOpenSnackBar();
-        isOpenSnackBar.value = true;
-        dialog.value = false
-      }else{
-        throw Error("Error")
-      }
-    }catch(error){
-      if(error.response){
-        alert("Error")
-      }
-    }finally{
-      setFormatCal(startDate.value,endDate.value)
+    }else{
+      try {
+        const { status } = await updateSchedule(item);
+        if(status === 200){
+          snackbarText.value = "저장 되었습니다"
+          clearOpenSnackBar();
+          isOpenSnackBar.value = true;
+          dialog.value = false
+        }else{
+          throw Error("Error")
+        }
+      }catch(error){
+        if(error){
+          alert("Error")
+        }
+      }finally{
+        setFormatCal(startDate.value,endDate.value)
+      } 
     } 
-  } 
+  }
+  
 }
 
 const dialog = ref<boolean>(false);
@@ -188,21 +188,24 @@ const onCellClick = (cellParam:CellClickParam) =>{
   currentDate.value = cellParam.date;
 }
 
-const onEventClick = (event:EventClick) =>{
+const onEventClick = (event:null | EventClick | undefined) =>{
   dialog.value = true;
-  
-  selectEvent.value = event;
-  scheduleId.value = event.id
+  if(event){
+    selectEvent.value = event
+    if(event.id){
+      scheduleId.value = event.id;
+    }
+    
+  }
 }
 
 const onReadyView = (val:ReadyView)=>{
-  startDate.value = dayjsformat(val.startDate).format("YYYY-MM-DD")
-  endDate.value = dayjsformat(val.endDate).format("YYYY-MM-DD");
+  startDate.value = dayjs(val.startDate).format("YYYY-MM-DD")
+  endDate.value = dayjs(val.endDate).format("YYYY-MM-DD");
   setFormatCal(startDate.value,endDate.value)
 }
 
 
-const yyyymm =  ref<string>(dayjsObject.getFormat("YYYY-MM"));
 const startDate = ref<string>("");
 const endDate = ref<string>("");
 const confirmModal = ref<boolean>(false);
