@@ -86,7 +86,7 @@ const setFormatCal = async (startDate:string,endDate:string)=>{
     }else{
       throw Error("Error")
     }
-  } catch (error:unknown) {
+  } catch (error) {
     if(error){
       alert("Error")
     }

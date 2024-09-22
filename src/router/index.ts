@@ -10,31 +10,6 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: "/blog-write",
-      name: "blog-write",
-      component: () => import("../views/BlogWrite.vue")
-    },
-    {
-      path: "/login",
-      name: "login",
-      component: () => import("../views/login/LoginView.vue")
-    },
-    {
-      path: "/compostion",
-      name: "Compostion",
-      component: () => import("@/views/compostion/CompositionView.vue")
-    },
-    {
-      path: "/calendar",
-      name: "Calendar",
-      component:  ()=>import("@/views/calendar/CalendarView.vue")
-    },
-    {
-      path: "/player",
-      name: "MusicPlayer",
-      component:  ()=>import("@/views/music/MusicPlayerView.vue")
-    },
-    {
       path:"/calendar2",
       name:"Calendar",
       component: ()=>import("@/views/calendar/VueCalView.vue")
