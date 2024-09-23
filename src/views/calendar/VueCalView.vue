@@ -191,6 +191,7 @@ const onCellClick = (cellParam:CellClickParam) =>{
 const onEventClick = (event:null | EventClick | undefined) =>{
   dialog.value = true;
   if(event){
+    currentDate.value = typeof event.start === "object" ? event.start : new Date();
     selectEvent.value = event
     if(event.id){
       scheduleId.value = event.id;
