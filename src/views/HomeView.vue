@@ -3,6 +3,7 @@
 import { getNaverNews } from "@/api/naverNewsApi";
 import { reactive, ref, nextTick } from "vue";
 import type { navernewsList } from "@/interface/naverResponse.interface";
+import HeaderComponent from "@/components/common/HeaderComponent.vue";
 import { useRouter } from "vue-router";
 
 const query = ref<string>("어플레이즈");
@@ -41,7 +42,8 @@ setNaverNews();
 </script>
 
 <template>
-  <v-container>
+  <v-container class="v_container">
+    <HeaderComponent/>
     <div class="d-flex justify-end mb-6">
       <v-btn color="blue-darken-3" @click="movePage('Calendar')">
         회의실 관리
@@ -72,3 +74,8 @@ setNaverNews();
     </div>
   </v-container>
 </template>
+<style scoped>
+.v_container{
+	padding-top: 50px;
+}
+</style>
