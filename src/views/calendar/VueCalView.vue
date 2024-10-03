@@ -51,6 +51,10 @@ const selectEvent = ref<EventClick | null>(null);
 const isOpenSnackBar = ref<boolean>(false);
 const snackbarText = ref<string>("저장 되었습니다");
 
+/**
+ * @description 스낵바 1초후 종료
+ * @author CHOI DAE GEON
+ */
 const clearOpenSnackBar = ()=>{
   setTimeout(() => {
     if(isOpenSnackBar.value){
@@ -59,7 +63,10 @@ const clearOpenSnackBar = ()=>{
   }, 1000);  
 }
 
-
+/**
+ * @description vue-cal 포멧 세팅
+ * @author CHOI DAE GEON
+ */
 const setFormatCal = async (startDate:string,endDate:string)=>{
   try {
     const { status,data } = await getWeekSchedule(startDate,endDate)
@@ -93,26 +100,46 @@ const setFormatCal = async (startDate:string,endDate:string)=>{
   }
 }
 
+/**
+ * @description vue-cal 변화 감지
+ * @param val Param
+ * @author CHOI DAE GEON
+ */
 const onChangeView = (val:Param) =>{
   startDate.value = dayjs(val.startDate).format("YYYY-MM-DD")
   endDate.value = dayjs(val.endDate).format("YYYY-MM-DD");
   setFormatCal(startDate.value,endDate.value)
 }
 
+/**
+ * @description 스케줄모달 종료
+ * @author CHOI DAE GEON
+ */
 const onCloseScheduleModal = ()=>{
   dialog.value = false;
   selectEvent.value = null
   scheduleId.value = -1
 }
 
+/**
+ * @description 스케줄 삭제
+ * @author CHOI DAE GEON
+ */
 const onDeleteSchedule = ()=>{
   confirmModal.value = true;
 }
-
+/**
+ * @description 예/아니오 모달 닫기
+ * @author CHOI DAE GEON
+ */
 const onCancelClick = ()=>{
   confirmModal.value = false
 }
 
+/**
+ * @description 예/아니오 모달 "예"클릭
+ * @author CHOI DAE GEON
+ */
 const onConfirmClick = async ()=>{
   try {
     const { status} =  await deleteScheduleId(scheduleId.value)
@@ -135,6 +162,11 @@ const onConfirmClick = async ()=>{
   }
 }
 
+/**
+ * @description 스케줄 등록
+ * @param item SaveSchedule | undefined
+ * @author CHOI DAE GEON
+ */
 const onSaveSchedule = async (item:SaveSchedule | undefined)=>{
   if(item){
     if(item.id === -1){
@@ -178,16 +210,30 @@ const onSaveSchedule = async (item:SaveSchedule | undefined)=>{
 }
 
 const dialog = ref<boolean>(false);
+
+/**
+ * @description 스케줄등록 팝업 오픈
+ * @author CHOI DAE GEON
+ */
 const openDialog = () =>{
   dialog.value = true;
 }
 
 const currentDate = ref<Date>(new Date());
 
+/**
+ * @description vue-cal cell click
+ * @author CHOI DAE GEON
+ */
 const onCellClick = (cellParam:CellClickParam) =>{
   currentDate.value = cellParam.date;
 }
 
+/**
+ * @description 이벤트 상세 클릭
+ * @param event null | EventClick | undefined
+ * @author CHOI DAE GEON
+ */
 const onEventClick = (event:null | EventClick | undefined) =>{
   dialog.value = true;
   if(event){
@@ -200,6 +246,11 @@ const onEventClick = (event:null | EventClick | undefined) =>{
   }
 }
 
+/**
+ * @description vue-cal ready event
+ * @param val ReadyView
+ * @author CHOI DAE GEON
+ */
 const onReadyView = (val:ReadyView)=>{
   startDate.value = dayjs(val.startDate).format("YYYY-MM-DD")
   endDate.value = dayjs(val.endDate).format("YYYY-MM-DD");
