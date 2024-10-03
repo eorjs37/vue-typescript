@@ -13,6 +13,11 @@ const router = createRouter({
       path:"/calendar2",
       name:"Calendar",
       component: ()=>import("@/views/calendar/VueCalView.vue")
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name:"404Page",
+      component:()=>import("@/views/common/404Page.vue")
     }
   ]
 });
